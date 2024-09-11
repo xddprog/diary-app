@@ -1,20 +1,23 @@
 import {Menu} from "antd";
 import Class from "../ClassComponents/Class.jsx";
-import {getTeachersCard} from "../../api/teachers.jsx";
+import {getTeachers} from "../../api/teachers.jsx";
 import AddNewTeacher from "../TeacherComponents/AddTeacher.jsx";
 import {useState} from "react";
 import AddClassModal from "../ClassComponents/AddClass.jsx";
 import AddSubjectModal from "../subjectComponents/AddSubject.jsx";
-function ManagerPageMenu(
+import Teacher from "../TeacherComponents/Teacher.jsx";
+import styled from "styled-components";
+
+
+export default function ManagerPageMenu(
     {
         setClassComponent,
         setTeachersComponents,
         subjectsOptions,
         classesOptions,
-        addSubjectItem,
-        addClassItem,
         setClassesOptions,
-        setSubjectOptions
+        setSubjectOptions,
+        handlerTeachers
     }
 ) {
     const [addClassModalIsOpen, setAddClassModalIsOpen] = useState(false);
@@ -37,9 +40,16 @@ function ManagerPageMenu(
     async function onClickSubject(subject){
         setTeachersComponents(
             [
-                await getTeachersCard(
+                await getTeachers(
                     subject.key, setTeachersComponents
-                ).then(teachers => teachers),
+                ).then(response => response.data.map(teacher => {
+                    <Teacher
+                        key={teacher.id}
+                        teacher={teacher}
+                        subject={subject.key}
+                        handlerTeachers={handlerTeachers}
+                    />
+                })),
                 <AddNewTeacher
                     subject={subject.key}
                     handlerTeachers={setTeachersComponents}
@@ -61,34 +71,35 @@ function ManagerPageMenu(
         setAddSubjectModalIsOpen(true)
     }
 
+    async function onClickMenuButton(item) {
+        switch (item.keyPath[item.keyPath.length - 1]) {
+            case 'subjects':
+                onClickSubject(item)
+                break
+            case 'classes':
+                onClickClass(item)
+                break
+            case 'addSubject':
+                onClickAddSubject(item)
+                break
+            case 'addClass':
+                onClickAddClass(item)
+                break
+        }
+    }
+
     return (
         <>
-            <Menu
-                style={{
-                    width: 256,
-                    height: '100vh',
-                    overflow: 'auto',
-                }}
+            <StyledMenu
                 selectable
-                onClick={(item) => {
-                    switch (item.keyPath[item.keyPath.length - 1]) {
-                        case 'subjects':
-                            onClickSubject(item)
-                            break
-                        case 'classes':
-                            onClickClass(item)
-                            break
-                        case 'addSubject':
-                            onClickAddSubject(item)
-                            break
-                        case 'addClass':
-                            console.log(1)
-                            onClickAddClass(item)
-                            break
-                    }
-                }}
+                onClick={onClickMenuButton}
                 mode="inline"
-                items={[subjectsOptions, classesOptions, addSubjectItem, addClassItem]}
+                items={[
+                    subjectsOptions, 
+                    classesOptions, 
+                    {key: 'addSubject', label:'Добавить предмет'}, 
+                    {key: 'addClass', label:'Добавить класс'}
+                ]}
             />
             <AddClassModal
                 handler={setAddClassModalIsOpen}
@@ -104,4 +115,9 @@ function ManagerPageMenu(
     )
 }
 
-export default ManagerPageMenu;
+
+const StyledMenu = styled(Menu)`
+    width: 256;
+    height: 100vh;
+    overflow: auto;
+`

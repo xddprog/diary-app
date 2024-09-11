@@ -1,32 +1,31 @@
+import styled from "styled-components"
+import { FlexRow } from "../../BaseComponents"
 
 
-function Marks({marks}) {
+export default function Marks({marks}) {
     return (
         <>
-            <div
-                style={{
-                    width: '30px',
-                    display: 'flex',
-                    flexDirection: 'row'
-                }}
-            >
+            <MarksContainer>
                 {[marks.map(item => {
                     return (
-                        <div
-                            style={{
-                                padding: '5px 10px',
-                                border: '#e5e7eb solid 1px',
-                                marginRight: '10px',
-                                borderRadius: '0px'
-                            }}
-                        >
+                        <MarksWrapper>
                             {item.mark_value}
-                        </div>
+                        </MarksWrapper>
                     )
                 })]}
-            </div>
+            </MarksContainer>
         </>
     )
 }
 
-export default Marks;
+
+const MarksContainer = styled(FlexRow)`
+    width: 30px;
+`
+
+const MarksWrapper = styled.div`
+    padding: 5px 10px;
+    border: #e5e7eb solid 1px;
+    margin-right: 10px;
+    border-radius: 0px
+`

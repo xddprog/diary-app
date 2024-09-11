@@ -41,42 +41,7 @@ export async function getClassInfo(classId, handlerTeachers, classesOptions, han
             Authorization:"Bearer " + localStorage.getItem("token"),
             role: localStorage.getItem("role")
         }
-    }).then((response) => {
-        let classroomTeacher
-        const clsInfo = response.data;
-        const classStudents = clsInfo.students.map((student) => {
-            return (
-                <Student
-                    student={student}
-                    key={student.id}
-                    handlerStudents={handlerStudents}
-                    classId={classId}
-                />
-            )
-        })
-
-        if (clsInfo.classroom_teacher !== null) {
-            classroomTeacher = (
-                <ClassroomTeacher
-                    teacher={clsInfo.classroom_teacher}
-                />
-            )
-        } else {
-            classroomTeacher = (
-                <Typography.Title
-                    level={5}
-                    style={{marginBottom: "0px", marginTop: "15px"}}
-                >
-                    Классного руководителя в данном классе нет
-                </Typography.Title>
-            )
-        }
-
-        return {
-            students: classStudents,
-            teacher: classroomTeacher,
-        }
-    })
+    }).then(response => response)
 }
 
 export async function setClassTeacher(teacherId, classId){

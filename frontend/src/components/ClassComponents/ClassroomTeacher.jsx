@@ -1,18 +1,15 @@
 import {Button, Card, Modal} from "antd";
 import {useState} from "react";
 import DeleteTeacherModal from "../TeacherComponents/DeleteTeacherModal.jsx";
+import styled from "styled-components";
 
 
-function ClassroomTeacher({teacher}) {
+export default function ClassroomTeacher({teacher}) {
     return (
         <>
-            <Card
+            <StyledCard
                 title={`${teacher.name} ${teacher.surname} ${teacher.middle_name}`}
                 bordered={false}
-                style={{
-                    width: "750px",
-                    marginTop: "15px"
-                }}
             >
                 <p><b>Идентификатор:</b>{` ${teacher.id}`}</p>
                 <p><b>Возраст:</b>{` ${teacher.age}`}</p>
@@ -43,9 +40,13 @@ function ClassroomTeacher({teacher}) {
                 }
                 </p>
                 </div>: <p><b>Зарегистрирован:</b> Нет</p>}
-            </Card>
+            </StyledCard>
         </>
     )
 }
 
-export default ClassroomTeacher;
+
+const StyledCard = styled(Card)`
+  width: 750px;
+  margin-top: 15px;
+`

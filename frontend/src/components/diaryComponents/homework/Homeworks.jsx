@@ -2,6 +2,7 @@ import HomeworksTable from "./HomeworksTable.jsx";
 import {useEffect, useState} from "react";
 import {DatePicker, Typography} from "antd";
 import {getStudentSchedule, getStudentScheduleRows} from "../../../api/schedule.jsx";
+import styled from "styled-components";
 
 
 function iso8601Week(date) {
@@ -18,7 +19,7 @@ function iso8601Week(date) {
 }
 
 
-function Homeworks() {
+export default function Homeworks() {
     const [schedule, setSchedule] = useState([]);
 
     useEffect(() => {
@@ -32,20 +33,22 @@ function Homeworks() {
         getStudentScheduleRows(date.year(), date.week()).then(
             response => {
                 setSchedule(response.data)
-                console.log(response.data)
             }
         );
     };
 
     return (
         <div>
-            <div style={{marginBottom: "30px"}}>
-                <Typography.Title level={5}> Выбрать неделю</Typography.Title>
+            <DatePickerContainer>
+                <Typography.Title level={5}>Выбрать неделю</Typography.Title>
                 <DatePicker onChange={onChange} picker="week" locale='ru_RU'/>
-            </div>
+            </DatePickerContainer>
             <HomeworksTable data={schedule} />
         </div>
     )
 }
 
-export default Homeworks;
+
+const DatePickerContainer = styled.div`
+    margin-bottom: 30px;
+`

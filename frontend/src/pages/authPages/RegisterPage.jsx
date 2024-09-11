@@ -1,16 +1,28 @@
 import RegisterUser from "../../components/authComponents/RegisterUser.jsx";
+import {styled} from 'styled-components'
+import { FlexColumn } from "../../components/BaseComponents.jsx";
 
 
-const RegisterPage = () => {
+export default function RegisterPage() {
     return (
-        <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "80%", flexDirection: "column"}}>
-            <div className='rounded-lg drop-shadow' style={{backgroundColor: 'white'}}>
-                <div className="" style={{width: "500px", padding: "30px", display: "flex", flexDirection: "column", alignItems: "center"}}>
-                    <RegisterUser/>
-                </div>
-            </div>
-        </div>
+        <Container>
+            <Wrapper>
+                <RegisterUser/>
+            </Wrapper>
+        </Container>
     )
 }
 
-export default RegisterPage
+
+const Wrapper = styled.div`
+    background-color: white;
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.02); 
+    border-radius: 0.5rem;
+    width: 500px;
+    padding: 30px;
+`
+
+
+const Container = styled(FlexColumn)`
+    height: 80%;
+`

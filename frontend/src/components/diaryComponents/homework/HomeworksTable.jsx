@@ -1,7 +1,8 @@
 import {Table} from "antd";
+import styled from "styled-components";
 
 
-function HomeworksTable({data}){
+export default function HomeworksTable({data}){
     const tableColumns = [
         {
             title: 'Предмет',
@@ -32,16 +33,12 @@ function HomeworksTable({data}){
 
     return (
         <div>
-            <Table
+            <StyledTable
                 bordered
-                locale={{'emptyText': <p style={{color: 'black'}}>На эту неделю нет домашнего задания</p>}}
+                locale={{'emptyText': <StyledParagraph>На эту неделю нет домашнего задания</StyledParagraph>}}
                 size={'small'}
                 pagination={false}
                 columns={tableColumns}
-                style={{
-                    width: '1500px',
-                    justifyContent: 'center'
-                }}
                 dataSource={data.map(row => {
                     return {
                         subject: row.subject.subject_name,
@@ -56,4 +53,12 @@ function HomeworksTable({data}){
     )
 }
 
-export default HomeworksTable
+
+const StyledTable = styled(Table)`
+    width: 1500px;
+    justify-content: center;
+`
+
+const StyledParagraph = styled.p`
+    color: 'black';
+`

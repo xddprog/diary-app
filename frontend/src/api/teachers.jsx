@@ -13,22 +13,12 @@ export async function getFreeTeachers() {
 }
 
 
-export async function getTeachersCard(subjectId, handlerTeachers) {
+export async function getTeachers(subjectId) {
     return await axios.get(`http://localhost:5000/teachers/${subjectId}`, {
         headers: {
             Authorization:"Bearer " + localStorage.getItem("token")
         }
-    }).then(
-        (response) => {
-            return response.data.map(teacher => {
-                return <Teacher
-                    key={teacher.id}
-                    teacher={teacher}
-                    subject={subjectId}
-                    handlerTeachers={handlerTeachers}
-                />
-            });
-        })
+    }).then(response => response)
 }
 
 export async function deleteTeacher(teacherId) {

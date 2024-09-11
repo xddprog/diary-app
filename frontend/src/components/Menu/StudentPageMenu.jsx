@@ -2,9 +2,10 @@ import {Avatar, Menu} from "antd";
 import {useEffect, useState} from "react";
 import {UserOutlined} from "@ant-design/icons";
 import {Link, useLocation} from "react-router-dom";
+import styled from "styled-components";
 
 
-function StudentPageMenu() {
+export default function StudentPageMenu() {
     const [selectedKey, setSelectedKey] = useState('');
     const location = useLocation()
     const items = [
@@ -74,8 +75,7 @@ function StudentPageMenu() {
 
     return (
         <div>
-            <Menu
-                style={{alignItems: 'center', justifyContent: 'center'}}
+            <StyledMenu
                 mode="horizontal"
                 items={items}
                 selectedKeys={[selectedKey]}
@@ -85,4 +85,8 @@ function StudentPageMenu() {
     )
 }
 
-export default StudentPageMenu;
+
+const StyledMenu = styled(Menu)`
+    align-items: center;
+    justify-content: center;
+`

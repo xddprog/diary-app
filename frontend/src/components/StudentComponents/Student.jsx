@@ -2,9 +2,10 @@ import {Button, Card} from "antd";
 import {useState} from "react";
 import DeleteStudentModal from "./DeleteStudentModal.jsx";
 import EditStudentModal from "./EditStudentModal.jsx";
+import styled from "styled-components";
 
 
-function Student({student, handlerStudents, classId}){
+export default function Student({student, handlerStudents, classId}){
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
 
@@ -18,33 +19,33 @@ function Student({student, handlerStudents, classId}){
 
     return(
         <div>
-            <Card
-            title={`${student.name} ${student.surname} ${student.middle_name}`}
-            bordered={false}
-            style={{
-                width: "750px",
-                marginTop: "15px"
-            }}
-            extra={
-                <div>
-                    <Button
-                        type="primary"
-                        style={{marginRight: "10px"}}
-                        onClick={handleClickEdit}
-                    >
-                        Редактировать
-                    </Button>
-                    <Button
-                        type="primary"
-                        danger
-                        ghost
-                        onClick={handleClickDelete}
-                    >
-                        Удалить
-                    </Button>
-                </div>
-            }
-        >
+            <StyledCard
+                title={`${student.name} ${student.surname} ${student.middle_name}`}
+                bordered={false}
+                style={{
+                    width: "750px",
+                    marginTop: "15px"
+                }}
+                extra={
+                    <div>
+                        <Button
+                            type="primary"
+                            style={{marginRight: "10px"}}
+                            onClick={handleClickEdit}
+                        >
+                            Редактировать
+                        </Button>
+                        <Button
+                            type="primary"
+                            danger
+                            ghost
+                            onClick={handleClickDelete}
+                        >
+                            Удалить
+                        </Button>
+                    </div>
+                }
+            >
             <p><b>Идентификатор:</b>{` ${student.id}`}</p>
             <p><b>Возраст:</b>{` ${student.age}`}</p>
 
@@ -68,7 +69,7 @@ function Student({student, handlerStudents, classId}){
                 }
                 </p>
                 </div>: <p><b>Зарегистрирован:</b> Нет</p>}
-            </Card>
+            </StyledCard>
             <DeleteStudentModal
                 isOpen={isOpenDeleteModal}
                 handler={setIsOpenDeleteModal}
@@ -87,4 +88,8 @@ function Student({student, handlerStudents, classId}){
     )
 }
 
-export default Student
+
+const StyledCard = styled(Card)`
+    width: 750px;
+    margin-top: 15px;
+`

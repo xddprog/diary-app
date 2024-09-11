@@ -2,17 +2,16 @@ import {Button, message, Modal, Space, Typography, Upload} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
 import {useState} from "react";
 import {sendHomework} from "../../../api/schedule.jsx";
+import styled from "styled-components";
 
 
-function SendHomework({drawerIsOpen, handler, homeworkId}) {
+export default function SendHomework({drawerIsOpen, handler, homeworkId}) {
     const [fileList, setFileList] = useState([]);
     const [messageApi, contextHolder] = message.useMessage();
 
 
     async function handleSubmit() {
         const r = await sendHomework(homeworkId, fileList).then(response => response);
-        console.log(r.data)
-        console.log(fileList)
     }
 
     async function onChangeUpload(info) {
@@ -52,7 +51,7 @@ function SendHomework({drawerIsOpen, handler, homeworkId}) {
                     </Button>
                 ]}
             >
-                <Space direction="vertical" style={{width: '100%', justifyContent: 'center'}}>
+                <StyledSpace direction="vertical">
                     <Typography.Title level={2}>Загрузить домашнее задание</Typography.Title>
                     <Typography.Paragraph>
                         Вы можете загрузить максимум 10 файлов.
@@ -68,10 +67,14 @@ function SendHomework({drawerIsOpen, handler, homeworkId}) {
                     >
                         <Button icon={<UploadOutlined />}>Загрузить файлы</Button>
                     </Upload>
-                </Space>
+                </StyledSpace>
             </Modal>
         </div>
     )
 }
 
-export default SendHomework;
+
+const StyledSpace = styled(Space)`
+    width: 100%;
+    justify-content: center;
+`

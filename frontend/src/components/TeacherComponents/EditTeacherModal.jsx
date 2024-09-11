@@ -1,8 +1,8 @@
 import {Button, Form, Input, InputNumber, Modal, Select, Space, Typography} from "antd";
 import {getSubjectsOptions} from "../../api/subjects.jsx";
 import {useEffect, useState} from "react";
-import {getStudentsCard, updateStudent} from "../../api/students.jsx";
-import {getTeachersCard, updateTeacher} from "../../api/teachers.jsx";
+import {getStudents, updateStudent} from "../../api/students.jsx";
+import {getTeachers, updateTeacher} from "../../api/teachers.jsx";
 
 
 function EditTeacherModal({teacherId, handler, modalIsOpen, subjectId, handlerTeachers}) {
@@ -18,7 +18,17 @@ function EditTeacherModal({teacherId, handler, modalIsOpen, subjectId, handlerTe
             const values = await form[0].validateFields()
             const response = await updateTeacher(values, teacherId).then(r => r)
             if (response.status === 200) {
-                const newStudents = await getTeachersCard(subjectId, handlerTeachers).then(cards => cards)
+                const newStudents = await getTeachers(
+                    subject.key, setTeachersComponents
+                ).then(response => response.data.map(teacher => {
+                    <Teacher
+                        key={teacher.id}
+                        teacher={teacher}
+                        subject={subject.key}
+                        handlerTeachers={handlerTeachers}
+                    />
+                }))
+                
                 handlerTeachers(newStudents)
                 handler(false)
             }

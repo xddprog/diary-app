@@ -4,6 +4,7 @@ import {Button, Form, Input, message, Select, Typography} from 'antd';
 import {registerUser} from "../../api/auth.jsx";
 import {useNavigate} from "react-router-dom";
 import * as r from "antd";
+import styled from 'styled-components';
 
 
 function RegisterUser() {
@@ -24,16 +25,18 @@ function RegisterUser() {
             value: 3
         }
     ]
+    const userRolesNavigateUrls = {
+        1: '/teacher',
+        2: '/student',
+        3: '/manager'
+    }
+
     // const userTypes = await getUserTypes().then(types => types).map(
     //     type => {return {
     //         label: type.name,
     //         value: type.id
     //     }}
     // );
-
-    useEffect(() => {
-
-    }, []);
 
     async function onFinish() {
         const values = await form[0].validateFields();
@@ -48,20 +51,7 @@ function RegisterUser() {
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("user_id", response.data.user_id);
 
-            switch (values.role){
-                case 1:
-                    console.log(1)
-                    navigate(`/teacher`, { replace: false })
-                    break
-                case 2:
-                    console.log(2)
-                    navigate(`/student`, { replace: false })
-                    break
-                case 3:
-                    console.log(3)
-                    navigate(`/manager`, { replace: false })
-                    break
-            }
+            navigate(userRolesNavigateUrls[values.role], { replace: false });
         } catch(error) {
             messageApi.open({
                 type: "error",
@@ -74,14 +64,13 @@ function RegisterUser() {
         <>
             {contextHolder}
             <Typography.Title level={1}>Регистрация</Typography.Title>
-            <Form
+            <StyledForm
                 name="normal_login"
                 className="login-form"
                 initialValues={{
                     remember: true,
                 }}
                 onFinish={onFinish}
-                style={{width:'100%'}}
                 form={form[0]}
             >
                 <Form.Item
@@ -168,15 +157,23 @@ function RegisterUser() {
                     />
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" style={{marginRight: 10}}>
+                    <StyledButton type="primary" htmlType="submit">
                         Зарегистрироваться
-                    </Button>
+                    </StyledButton>
                     <a onClick={() => navigate('/login')}>Войти</a>
                 </Form.Item>
-            </Form>
+            </StyledForm>
         </>
     )
 }
 
+
+const StyledForm = styled(Form)`
+    width: 100%;
+`
+
+const StyledButton = styled(Button)`
+    margin-right: 10px;
+`
 
 export default RegisterUser;

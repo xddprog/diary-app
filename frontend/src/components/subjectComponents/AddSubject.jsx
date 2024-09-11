@@ -1,15 +1,17 @@
 import {Button, Form, Input, Modal, Select, Space, Typography} from "antd";
 import {addNewClass, getClassesOptions} from "../../api/classes.jsx";
 import {addNewSubject, getSubjectsOptions} from "../../api/subjects.jsx";
+import styled from "styled-components";
 
 
-function AddSubjectModal({handler, handlerSubjects, modalIsOpen}) {
+export default function AddSubjectModal({handler, handlerSubjects, modalIsOpen}) {
     const form = Form.useForm()
 
     async function handleSubmit() {
         try {
             const values = await form[0].validateFields()
             const response = await addNewSubject(values).then(r => r)
+            
             if (response.status === 201) {
                 const newSubjectOptions = await getSubjectsOptions().then(r => r)
                 handlerSubjects(newSubjectOptions)
@@ -33,9 +35,9 @@ function AddSubjectModal({handler, handlerSubjects, modalIsOpen}) {
                 </Button>
             ]}
         >
-            <Space direction="horizontal" style={{width: '100%', justifyContent: 'center'}}>
+            <StyledSpace direction="horizontal">
                 <Typography.Title level={1} >Добавить класс</Typography.Title>
-            </Space>
+            </StyledSpace>
             <Form
                 form={form[0]}
                 layout="horizontal"
@@ -72,4 +74,8 @@ function AddSubjectModal({handler, handlerSubjects, modalIsOpen}) {
     )
 }
 
-export default AddSubjectModal
+
+const StyledSpace = styled(Space)`
+    justify-content: center;
+    width: 750px;
+`

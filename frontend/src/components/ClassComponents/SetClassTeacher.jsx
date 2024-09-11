@@ -2,8 +2,8 @@ import {Button, List, Modal, Space} from "antd";
 import {useEffect, useState} from "react";
 import {getFreeTeachers} from "../../api/teachers.jsx";
 import {setClassTeacher} from "../../api/classes.jsx";
-import Teacher from "../TeacherComponents/Teacher.jsx";
 import ClassroomTeacher from "./ClassroomTeacher.jsx";
+import styled from "styled-components";
 
 
 function SetTeacherButton({teacherId, classId, handlerTeacher, handler}) {
@@ -32,8 +32,7 @@ function SetTeacherModal({modalIsOpen, handlerTeacher, handler, classId, teacher
             onCancel={handler}
             footer={[]}
         >
-            <List
-                style={{marginTop: '20px', marginLeft: '10px'}}
+            <StyledList
                 itemLayout="horizontal"
                 dataSource={teacherOptions}
                 renderItem={(item) => (
@@ -59,7 +58,7 @@ function SetTeacherModal({modalIsOpen, handlerTeacher, handler, classId, teacher
 }
 
 
-function SetTeacher({handlerTeacher, classId}) {
+export default function SetTeacher({handlerTeacher, classId}) {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [teacherOptions, setTeacherOptions] = useState([]);
 
@@ -69,16 +68,15 @@ function SetTeacher({handlerTeacher, classId}) {
 
     return (
         <Space direction="vertical">
-            <Button
+            <StyledButton
                 type="primary"
-                style={{ marginTop: "15px"}}
                 onClick={() => {
                     setModalIsOpen(true)
                     getFreeTeachers().then(r => setTeacherOptions(r))
                 }}
             >
                 Выбрать учителя
-            </Button>
+            </StyledButton>
             <SetTeacherModal
                 modalIsOpen={modalIsOpen}
                 handler={handleCancel}
@@ -90,4 +88,13 @@ function SetTeacher({handlerTeacher, classId}) {
     )
 }
 
-export default SetTeacher;
+
+const StyledList = styled(List)`
+    margin-top: 20px;
+    margin-left: 10px;
+`
+
+
+const StyledButton = styled(Button)`
+    margin-top: 15px;
+`

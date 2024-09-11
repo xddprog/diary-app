@@ -1,6 +1,6 @@
 import {Button, Form, Input, InputNumber, Modal, Select, Space, Typography} from "antd";
 import {useState} from "react";
-import {addStudent, getStudentsCard} from "../../api/students.jsx";
+import {addStudent, getStudents} from "../../api/students.jsx";
 
 
 function AddStudentModal({classId, modalIsOpen, handler, subjectOptions, handlerStudents}) {
@@ -12,7 +12,17 @@ function AddStudentModal({classId, modalIsOpen, handler, subjectOptions, handler
             values.student_class = classId
             const response = await addStudent(values).then(r => r)
             if (response.status === 201) {
-                const newStudents = await getStudentsCard(classId, handlerStudents).then(cards => cards)
+                const newStudents = await getStudents(classId).then(
+                    response => response.data.map(student => {
+                        return (
+                            <Student
+                                student={student}
+                                handlerStudents={handlerStudents}
+                                classId={classId}
+                            />
+                        )
+                    })
+                )
                 handlerStudents(newStudents)
             }
             handler()

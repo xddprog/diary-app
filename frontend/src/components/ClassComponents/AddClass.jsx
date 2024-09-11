@@ -1,16 +1,18 @@
 import {Button, Form, Modal, Select, Space, Typography} from "antd";
 import {addNewClass, getClassesOptions} from "../../api/classes.jsx";
+import styled from "styled-components";
 
 
-function AddClassModal({handler, handlerClasses, modalIsOpen}) {
+export default function AddClassModal({handler, handlerClasses, modalIsOpen}) {
     const form = Form.useForm()
 
     async function handleSubmit() {
         try {
             const values = await form[0].validateFields()
-            console.log(values)
             values.class_number = Number(values.class_number)
+
             const response = await addNewClass(values).then(r => r)
+
             if (response.status === 201) {
                 const newClassOptions = await getClassesOptions().then(r => r)
                 handlerClasses(newClassOptions)
@@ -34,27 +36,27 @@ function AddClassModal({handler, handlerClasses, modalIsOpen}) {
                 </Button>
             ]}
         >
-            <Space direction="horizontal" style={{width: '100%', justifyContent: 'center'}}>
+            <StyledSpace direction="horizontal" >
                 <Typography.Title level={1} >Добавить класс</Typography.Title>
-            </Space>
+            </StyledSpace>
             <Form
-                    form={form[0]}
-                    layout="horizontal"
-                    name="normal_login"
-                    className="login-form"
-                    initialValues={{
-                        remember: true,
-                    }}
-                    onFinish={handleSubmit}
-                    labelCol={{
-                        span: 5,
-                    }}
-                    wrapperCol={{
-                        span: 18,
-                    }}
-                    style={{
-                        maxWidth: 600,
-                    }}
+                form={form[0]}
+                layout="horizontal"
+                name="normal_login"
+                className="login-form"
+                initialValues={{
+                    remember: true,
+                }}
+                onFinish={handleSubmit}
+                labelCol={{
+                    span: 5,
+                }}
+                wrapperCol={{
+                    span: 18,
+                }}
+                style={{
+                    maxWidth: 600,
+                }}
             >
                 <Form.Item
                     label="Номер"
@@ -96,4 +98,8 @@ function AddClassModal({handler, handlerClasses, modalIsOpen}) {
     )
 }
 
-export default AddClassModal
+
+const StyledSpace = styled(Space)`
+    justify-content: center;
+    width: 750px;
+`

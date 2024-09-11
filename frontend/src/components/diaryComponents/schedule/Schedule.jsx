@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {DatePicker, Table, Typography} from "antd";
 import ScheduleTable from "./ScheduleTable.jsx";
 import {getStudentSchedule} from "../../../api/schedule.jsx";
+import styled from "styled-components";
 
 function iso8601Week(date) {
     date.setDate(date.getDate() + 4 - (date.getDay() || 7));
@@ -17,7 +18,7 @@ function iso8601Week(date) {
 }
 
 
-function Schedule() {
+export default function Schedule() {
     const [schedule, setSchedule] = useState([]);
 
     useEffect(() => {
@@ -30,7 +31,6 @@ function Schedule() {
     const onChange = (date, dateString) => {
         getStudentSchedule(date.year(), date.week()).then(
             response => {
-                console.log(response.data)
                 setSchedule(response.data)
             }
         );
@@ -38,10 +38,10 @@ function Schedule() {
 
     return (
         <div>
-            <div style={{marginBottom: "30px"}}>
+            <StyledDiv>
                 <Typography.Title level={5}> Выбрать неделю</Typography.Title>
                 <DatePicker onChange={onChange} picker="week" locale='ru_RU' />
-            </div>
+            </StyledDiv>
             {schedule.length !== 0 ? schedule.map(data => {
                 return (
                     <div>
@@ -54,4 +54,7 @@ function Schedule() {
     )
 }
 
-export default Schedule
+
+const StyledDiv = styled.div`
+    margin-bottom: 30px;
+`

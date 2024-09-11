@@ -14,22 +14,12 @@ export async function deleteStudent(studentId) {
 }
 
 
-export async function getStudentsCard(classId, handlerStudents) {
+export async function getStudents(classId) {
     return await axios.get(`http://localhost:5000/students/${classId}`, {
         headers: {
             Authorization:"Bearer " + localStorage.getItem("token")
         }
-    }).then(response => {
-        return response.data.map(student => {
-            return (
-                <Student
-                    student={student}
-                    handlerStudents={handlerStudents}
-                    classId={classId}
-                />
-            )
-        })
-    })
+    }).then(response => response)
 }
 
 export async function addStudent(values) {

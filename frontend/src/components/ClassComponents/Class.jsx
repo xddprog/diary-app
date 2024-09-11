@@ -3,11 +3,14 @@ import {getClassInfo} from "../../api/classes.jsx";
 import {List, Pagination, Space, Typography} from "antd";
 import AddStudent from "../StudentComponents/AddStudent.jsx";
 import SetTeacher from "./SetClassTeacher.jsx";
+import Student from "../StudentComponents/Student.jsx";
+import ClassroomTeacher from "./ClassroomTeacher.jsx";
+import styled from "styled-components";
 
 
 
 
-function Class({cls, setTeachersComponents, classesOptions, subjectOptions}) {
+export default function Class({cls, setTeachersComponents, classesOptions, subjectOptions}) {
     const [teacherComponent, setTeacherComponent] = useState(null);
     const [studentsComponents, setStudentsComponent] = useState([]);
     const [pageMinValue, setPageMinValue] = useState(0);
@@ -21,9 +24,34 @@ function Class({cls, setTeachersComponents, classesOptions, subjectOptions}) {
             setTeachersComponents,
             classesOptions,
             setStudentsComponent
-        ).then(clsInfo => {
-            setStudentsComponent(clsInfo.students)
-            setTeacherComponent(clsInfo.teacher)
+        ).then((response) => {
+            let classroomTeacher    
+            const clsInfo = response.data;
+            const classStudents = clsInfo.students.map((student) => {
+                return (
+                    <Student
+                        student={student}
+                        key={student.id}
+                        handlerStudents={handlerStudents}
+                        classId={cls}
+                    />
+                )
+            })
+
+            if (clsInfo.classroom_teacher !== null) {
+                classroomTeacher = (
+                    <ClassroomTeacher teacher={clsInfo.classroom_teacher}/>
+                )
+            } else {
+                classroomTeacher = (
+                    <ClassroomTeacherNotFound level={5}>
+                        Классного руководителя в данном классе нет
+                    </ClassroomTeacherNotFound>
+                )
+            }
+            
+            setStudentsComponent(classStudents)
+            setTeacherComponent(classroomTeacher)
         })
     }, []);
 
@@ -45,20 +73,38 @@ function Class({cls, setTeachersComponents, classesOptions, subjectOptions}) {
 
     return (
         <Space direction="vertical" >
-            <Typography.Title style={{marginBottom: '0px'}}>Классный руководитель</Typography.Title>
+            <ClassTitle>Классный руководитель</ClassTitle>
             {teacherComponent}
             <SetTeacher classId={cls} handlerTeacher={setTeacherComponent}/>
-            <Typography.Title style={{marginTop: '35px', marginBottom: '0px'}}>Ученики</Typography.Title>
+            <ClassStudentsContainerTitle>Ученики</ClassStudentsContainerTitle>
             {studentsComponents.length !== 0 ? (<List
                 pagination={{
                     pageSize: 4
                 }}
                 dataSource={studentsComponents}
-                renderItem={item => <List.Item style={{border: null}}>{item}</List.Item>}
+                renderItem={item => <StyledListItem>{item}</StyledListItem>}
             />): []}
-            <AddStudent handlerStudents={setStudentsComponent} classId={cls} subjectOptions={subjectOptions}/>
+            <AddStudent 
+                handlerStudents={setStudentsComponent} 
+                classId={cls} 
+                subjectOptions={subjectOptions}
+            />
         </Space>
     )
 }
 
-export default Class;
+const ClassTitle = styled(Typography.Title)`
+    margin-bottom: 0px;
+`
+
+const ClassroomTeacherNotFound = styled(ClassTitle)`
+    margin-top: 15px;
+`
+
+const ClassStudentsContainerTitle = styled(ClassTitle)`
+    margin-top: 35px;
+`
+
+const StyledListItem = styled(List.Item)`
+    border: none;
+`

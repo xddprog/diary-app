@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.6",
+    "@rollup/rollup-darwin-arm64": "^4.21.2",
     "antd": "^5.16.2",
     "axios": "^1.6.8",
     "dayjs": "^1.11.11",
@@ -20,6 +21,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
     "react-sticky-box": "^2.0.5",
+    "styled-components": "^6.1.13",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

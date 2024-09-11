@@ -1,22 +1,21 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {Space} from "antd";
-import {getClassesOptions, getClassInfo} from "../../api/classes.jsx";
+import {getClassesOptions} from "../../api/classes.jsx";
 import {getSubjectsOptions} from "../../api/subjects.jsx";
-import {getTeachersCard} from "../../api/teachers.jsx";
 import ManagerPageMenu from "../../components/Menu/ManagerPageMenu.jsx";
-import AddNewTeacher from "../../components/TeacherComponents/AddTeacher.jsx";
-import Class from "../../components/ClassComponents/Class.jsx";
 import {checkUser} from "../../api/auth.jsx";
 import ErrorBoundary from "../../components/errorComponents/ErrorBoundary.jsx";
+import { FlexRow } from "../../components/BaseComponents.jsx";
+import styled from "styled-components";
 
 
-function ManagerPage() {
+export default function ManagerPage() {
     const [subjectsOptions, setSubjectsOptions] = useState({})
     const [classesOptions, setClassesOptions] = useState({})
     const [teachersComponents, setTeachersComponents] = useState([])
     const [classComponent, setClassComponent] = useState(null)
-    const [errorDetail, setErrorDetail] = React.useState(null);
-    const [errorStatus, setErrorStatus] = React.useState(null);
+    const [errorDetail, setErrorDetail] = useState(null);
+    const [errorStatus, setErrorStatus] = useState(null);
 
     useEffect(() => {
         checkUser(3).then().catch(err => {
@@ -31,27 +30,32 @@ function ManagerPage() {
         <>
             {errorStatus ?
                 <ErrorBoundary errorStatus={errorStatus} errorDetail={errorDetail} /> :
-                <div style={{display: 'flex', flexFlow: 'row nowrap'}}>
+                <MainPageContainer>
                     <ManagerPageMenu
                         setTeachersComponents={setTeachersComponents}
                         setClassComponent={setClassComponent}
                         subjectsOptions={subjectsOptions}
                         classesOptions={classesOptions}
-                        addSubjectItem={{key: 'addSubject', label:'Добавить предмет'}}
-                        addClassItem={{key: 'addClass', label:'Добавить класс'}}
                         setClassesOptions={setClassesOptions}
                         setSubjectOptions={setSubjectsOptions}
+                        handlerTeachers={setTeachersComponents}
                     />
-                    {<Space direction='vertical' style={{justifyContent: 'center', marginLeft: "150px", width:"750px"}}>
-                        {teachersComponents}
-                    </Space>}
-                    {<Space direction='vertical' style={{justifyContent: 'center', marginLeft: "150px", width:"750px"}}>
-                        {classComponent}
-                    </Space>}
-                </div>
+                    {<StyledSpace direction='vertical'> {teachersComponents} </StyledSpace>}
+                    {<StyledSpace direction='vertical'> {classComponent} </StyledSpace>}
+                </MainPageContainer>
             }
         </>
     )
 }
 
-export default ManagerPage;
+
+const MainPageContainer = styled(FlexRow)`
+    display: flex;
+    flex-flow: row nowrap;
+`
+
+const StyledSpace = styled(Space)`
+    justify-content: center;
+    margin-left: 150px;
+    width: 750px
+`

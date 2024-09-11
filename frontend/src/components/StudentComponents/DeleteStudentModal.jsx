@@ -1,11 +1,11 @@
 import {Modal} from "antd";
-import {deleteStudent, getStudentsCard} from "../../api/students.jsx";
+import {deleteStudent, getStudents} from "../../api/students.jsx";
 
 
 function DeleteStudentModal({isOpen, handler, handlerStudents, studentId, classId}) {
     async function handleOkButton() {
         await deleteStudent(studentId).then(status => status)
-        const newStudents = await getStudentsCard(classId, handlerStudents).then(students => students)
+        const newStudents = await getStudents(classId).then(students => students)
         handlerStudents(newStudents)
         handler(false)
     }

@@ -1,11 +1,22 @@
-import {deleteTeacher, getTeachersCard} from "../../api/teachers.jsx";
+import {deleteTeacher, getTeachers} from "../../api/teachers.jsx";
 import {Modal} from "antd";
 import AddNewTeacher from "./AddTeacher.jsx";
 
 function DeleteTeacherModal({isOpen, handler, handlerTeachers, teacherId, subject}) {
     async function handleOkButton(){
         await deleteTeacher(teacherId).then(status => status)
-        const newTeachers = await getTeachersCard(subject, handlerTeachers).then(cards => cards)
+
+        const newTeachers = await getTeachers(
+            subject.key, setTeachersComponents
+        ).then(response => response.data.map(teacher => {
+            <Teacher
+                key={teacher.id}
+                teacher={teacher}
+                subject={subject.key}
+                handlerTeachers={handlerTeachers}
+            />
+        }))
+
         handlerTeachers(
             [
                 newTeachers,
@@ -13,7 +24,6 @@ function DeleteTeacherModal({isOpen, handler, handlerTeachers, teacherId, subjec
                     subject={subject}
                     handlerTeachers={handlerTeachers}
                     teachers={newTeachers}
-
                 />
             ]
         )

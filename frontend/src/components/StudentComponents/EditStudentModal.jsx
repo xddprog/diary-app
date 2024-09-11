@@ -2,10 +2,20 @@ import {Button, Form, Input, InputNumber, Modal, Select, Space, Typography} from
 import {getSubjectsOptions} from "../../api/subjects.jsx";
 import {useEffect, useState} from "react";
 import {getClassesOptions} from "../../api/classes.jsx";
-import {getStudentsCard, updateStudent} from "../../api/students.jsx";
+import {getStudents, updateStudent} from "../../api/students.jsx";
+import Student from "./Student.jsx";
+import styled from "styled-components";
 
 
-function EditStudentModal({studentId, handler, modalIsOpen, classId, handlerStudents}) {
+export default function EditStudentModal(
+    {
+        studentId, 
+        handler,
+        modalIsOpen, 
+        classId, 
+        handlerStudents
+    }
+) {
     const form = Form.useForm()
     const [subjectOptions, setSubjectOptions] = useState([])
     const [classesOptions, setClassesOptions] = useState([])
@@ -20,7 +30,17 @@ function EditStudentModal({studentId, handler, modalIsOpen, classId, handlerStud
             const values = await form[0].validateFields()
             const response = await updateStudent(values, studentId).then(r => r)
             if (response.status === 200) {
-                const newStudents = await getStudentsCard(classId, handlerStudents).then(cards => cards)
+                const newStudents = await getStudents(classId).then(
+                    response => response.data.map(student => {
+                        return (
+                            <Student
+                                student={student}
+                                handlerStudents={handlerStudents}
+                                classId={classId}
+                            />
+                        )
+                    })
+                )
                 handlerStudents(newStudents)
                 handler(false)
             }
@@ -42,9 +62,9 @@ function EditStudentModal({studentId, handler, modalIsOpen, classId, handlerStud
                 </Button>,
             ]}
         >
-            <Space direction="vertical" style={{width: '100%', justifyContent: 'center'}}>
+            <StyledSpace direction="vertical">
                  <Typography.Title level={1}>Отредактировать ученика</Typography.Title>
-            </Space>
+            </StyledSpace>
             <Form
                 form={form[0]}
                 layout="horizontal"
@@ -152,4 +172,8 @@ function EditStudentModal({studentId, handler, modalIsOpen, classId, handlerStud
     )
 }
 
-export default EditStudentModal
+
+const StyledSpace = styled(Space)`
+    width: 100%;
+    justify-content: center;
+`

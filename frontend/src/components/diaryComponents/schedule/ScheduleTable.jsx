@@ -3,9 +3,10 @@ import {useState} from "react";
 import SendHomework from "../homework/SendHomework.jsx";
 import Marks from "../mark/ScheduleMark.jsx";
 import HomeworkWrapper from "../homework/HomeworkWrapper.jsx";
+import styled from "styled-components";
 
 
-function ScheduleTable({data}) {
+export default function ScheduleTable({data}) {
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
     const [thisHomework, setThisHomework] = useState(null);
     const tableColumns = [
@@ -40,9 +41,9 @@ function ScheduleTable({data}) {
 
     return (
         <>
-            <Table
+            <StyledTable
                 bordered
-                locale={{'emptyText': <p style={{color: 'black'}}>На этот день нет расписания</p>}}
+                locale={{'emptyText': <StyledParagraph>На этот день нет расписания</StyledParagraph>}}
                 onRow={(record, rowIndex) => {
                     return {
                         onClick: (event) => {
@@ -53,7 +54,6 @@ function ScheduleTable({data}) {
                 size={'small'}
                 pagination={false}
                 columns={tableColumns}
-                style={{justifyContent: 'center', width: '1500px', marginBottom: '30px'}}
                 dataSource={data.constructor !== Array ? data.rows.map(((row, index) => {
                     return {
                         rowNumber: index + 1,
@@ -68,4 +68,14 @@ function ScheduleTable({data}) {
     )
 }
 
-export default ScheduleTable
+
+const StyledTable = styled(Table)`
+    justify-content: 'center';
+    width: 1500px;
+    margin-bottom: 30px;
+`
+
+
+const StyledParagraph = styled.p`
+    color: 'black';
+`

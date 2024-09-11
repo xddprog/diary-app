@@ -1,6 +1,6 @@
 import {Button, Form, Input, InputNumber, Modal, Select, Space, Typography} from "antd";
 import {useState} from "react";
-import {addNewTeacher, getTeachersCard} from "../../api/teachers.jsx";
+import {addNewTeacher, getTeachers} from "../../api/teachers.jsx";
 import * as r from "antd";
 import Teacher from "./Teacher.jsx";
 
@@ -16,7 +16,18 @@ function AddTeacherModal({modalIsOpen, handler, subject, handlerTeachers}) {
 
             const response = await addNewTeacher(values).then(r => r)
             if (response.status === 201) {
-                const newTeachers = await getTeachersCard(subject, handlerTeachers).then(cards => cards)
+
+                const newTeachers = await getTeachers(
+                    subject.key, setTeachersComponents
+                ).then(response => response.data.map(teacher => {
+                    <Teacher
+                        key={teacher.id}
+                        teacher={teacher}
+                        subject={subject.key}
+                        handlerTeachers={handlerTeachers}
+                    />
+                }))
+                
                 handlerTeachers(
                     [
                         newTeachers,

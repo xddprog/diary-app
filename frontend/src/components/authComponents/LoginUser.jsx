@@ -1,11 +1,11 @@
 import {useNavigate} from "react-router-dom";
 import {Button, Form, Input, message, Select, Typography} from "antd";
-import React, {useEffect} from "react";
-import {loginUser, registerUser} from "../../api/auth.jsx";
+import {loginUser} from "../../api/auth.jsx";
 import {LockOutlined, MailOutlined, NumberOutlined, SkypeOutlined, WhatsAppOutlined} from "@ant-design/icons";
+import styled from "styled-components";
 
-function LoginUser(){
-const navigate = useNavigate();
+export default function LoginUser(){
+    const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
     const form = Form.useForm()
     const userTypes = [
@@ -22,16 +22,17 @@ const navigate = useNavigate();
             value: 3
         }
     ]
+    const userRolesUrls = {
+        1: '/teacher',
+        2: '/student',
+        3: '/manager'
+    }
     // const userTypes = await getUserTypes().then(types => types).map(
     //     type => {return {
     //         label: type.name,
     //         value: type.id
     //     }}
     // );
-
-    useEffect(() => {
-
-    }, []);
 
     async function onFinish() {
         try {
@@ -46,19 +47,7 @@ const navigate = useNavigate();
             localStorage.setItem('token', response.data.token)
             localStorage.setItem('user_id', response.data.user_id)
 
-            switch (values.role){
-                case 1:
-                    navigate(`/teacher`, { replace: false })
-                    break
-                case 2:
-                    console.log(2)
-                    navigate(`/student`, { replace: false })
-                    break
-                case 3:
-                    console.log(3)
-                    navigate(`/manager`, { replace: false })
-                    break
-            }
+            navigate(userRolesUrls[values.role], { replace: false });
         } catch(error) {
             messageApi.open({
                 type: "error",
@@ -71,14 +60,13 @@ const navigate = useNavigate();
         <>
             {contextHolder}
             <Typography.Title level={1}>Вход в аккаунт</Typography.Title>
-            <Form
+            <StyledForm
                 name="normal_login"
                 className="login-form"
                 initialValues={{
                     remember: true,
                 }}
                 onFinish={onFinish}
-                style={{width:'100%'}}
                 form={form[0]}
             >
                 <Form.Item
@@ -127,14 +115,22 @@ const navigate = useNavigate();
                     />
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" style={{marginRight: 10}}>
+                    <StyledButton type="primary" htmlType="submit">
                         Войти
-                    </Button>
+                    </StyledButton>
                     <a onClick={() => navigate('/register')}>Регистрация</a>
                 </Form.Item>
-            </Form>
+            </StyledForm>
         </>
     )
 }
 
-export default LoginUser;
+
+
+const StyledForm = styled(Form)`
+    width: 100%;
+`
+
+const StyledButton = styled(Button)`
+    margin-right: 10px;
+`
