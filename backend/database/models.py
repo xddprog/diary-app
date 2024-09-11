@@ -144,8 +144,8 @@ class Mark(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     mark_value: Mapped[int]
     date: Mapped[datetime]
-    subject: Mapped['Subject'] = relationship(back_populates='marks', uselist=False)
-    student: Mapped['Student'] = relationship(back_populates='marks', uselist=False)
+    subject: Mapped['Subject'] = relationship(back_populates='marks', uselist=False, lazy='selectin')
+    student: Mapped['Student'] = relationship(back_populates='marks', uselist=False, lazy='selectin')
 
     subject_fk: Mapped[int] = mapped_column(ForeignKey('subjects.id'))
     student_fk: Mapped[int] = mapped_column(ForeignKey('students.id'))

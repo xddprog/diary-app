@@ -26,7 +26,7 @@ def load_database_config() -> DatabaseConfig:
         db_user=env.str("DB_USER"),
         db_pass=env.str("DB_PASS"),
         db_host=env.str("DB_HOST"),
-        db_port=env.str("DB_PORT")
+        db_port=env.str("DB_PORT"),
     )
 
 

@@ -14,7 +14,9 @@ class SubjectService:
     async def dump_subjects(self, subjects: list[Subject]) -> list[BaseSubjectModel]:
         return [await self.model_dump(subject) for subject in subjects]
 
-    async def get_subject(self, subject_id: int, dump: bool = False) -> Subject | BaseSubjectModel:
+    async def get_subject(
+        self, subject_id: int, dump: bool = False
+    ) -> Subject | BaseSubjectModel:
         subject = await self.repository.get_one(subject_id)
         return await self.model_dump(subject) if dump else subject
 

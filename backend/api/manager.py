@@ -1,9 +1,4 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 
-router = APIRouter(
-    prefix="/managers",
-    tags=["managers"]
-)
+router = APIRouter(prefix="/managers", tags=["managers"])

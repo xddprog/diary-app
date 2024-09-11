@@ -2,7 +2,6 @@ from datetime import timedelta, datetime
 
 import jwt
 from passlib.context import CryptContext
-from pydantic import UUID4
 
 import utils.errors.auth_errors as errors
 from config import load_jwt_config
@@ -17,18 +16,24 @@ class AuthService:
     async def create_token(self, **kwargs):
         expire = datetime.now() + timedelta(minutes=self.config.access_token_time)
         kwargs.update({"exp": expire})
-        token = jwt.encode(kwargs, self.config.jwt_secret, algorithm=self.config.algorithm)
+        token = jwt.encode(
+            kwargs, self.config.jwt_secret, algorithm=self.config.algorithm
+        )
         return token
 
     async def verify_token(self, token):
         try:
-            payload = jwt.decode(token.credentials, self.config.jwt_secret, algorithms=[self.config.algorithm])
+            payload = jwt.decode(
+                token.credentials,
+                self.config.jwt_secret,
+                algorithms=[self.config.algorithm],
+            )
             email = payload.get("email")
             role = payload.get("role")
             if email is None or role is None:
                 raise errors.InvalidToken()
             return payload
-        except (jwt.exceptions.PyJWTError, AttributeError) as e:
+        except (jwt.exceptions.PyJWTError, AttributeError):
             raise errors.InvalidToken()
 
     async def register_user(self, form: RegisterModel, user_registered: bool) -> None:

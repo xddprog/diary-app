@@ -8,6 +8,7 @@ class RegisterModel(BaseModel):
     hashed_password: str
     vk: str | None = None
     telegram: str | None = None
+    registered: bool = False
 
 
 class LoginModel(BaseModel):

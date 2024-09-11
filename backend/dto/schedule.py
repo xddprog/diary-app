@@ -1,9 +1,8 @@
-import time
 from datetime import datetime
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 
-from dto.subject import BaseSubjectModel, SubjectInScheduleModel
+from dto.subject import SubjectInScheduleModel
 
 
 class Homework(BaseModel):

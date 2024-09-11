@@ -2,7 +2,7 @@ from pydantic import UUID4
 from sqlalchemy import select, delete
 from sqlalchemy.orm import selectinload
 
-from dto.student import StudentModel, UpdateStudentModel
+from dto.student import UpdateStudentModel
 from .base import SqlAlchemyRepository
 from database.models import Student, Class, Subject
 from database.connection import session_factory
@@ -19,13 +19,13 @@ class StudentRepository(SqlAlchemyRepository):
 
     async def delete(self, item_id: UUID4) -> None:
         async with session_factory() as session:
-            query = select(
-                self.model
-            ).where(
-                self.model.id == item_id
-            ).options(
-                selectinload(self.model.marks),
-                selectinload(self.model.subjects)
+            query = (
+                select(self.model)
+                .where(self.model.id == item_id)
+                .options(
+                    selectinload(self.model.marks),
+                    selectinload(self.model.subjects),
+                )
             )
 
             student = await session.execute(query)
@@ -41,7 +41,9 @@ class StudentRepository(SqlAlchemyRepository):
             await session.execute(query)
             await session.commit()
 
-    async def update_with_cls_and_subjects(self, item_id: UUID4, update_data: UpdateStudentModel) -> None:
+    async def update_with_cls_and_subjects(
+        self, item_id: UUID4, update_data: UpdateStudentModel
+    ) -> None:
         async with self.session_factory() as session:
             student = await session.get(Student, item_id)
             if update_data.student_class:
@@ -52,3 +54,9 @@ class StudentRepository(SqlAlchemyRepository):
                     subject = await session.get(Subject, subject_id)
                     student.subjects.append(subject)
             await session.commit()
+
+    async def get_all_student_marks(self, student_id: UUID4, year: int):
+        async with self.session_factory() as session:
+            query = select(Subject).where(Subject.students.has(id=student_id))
+            subjects = await session.execute(query)
+            return subjects.scalars().all()

@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-from fastapi import UploadFile
 from pydantic import UUID4
 
 from database.models import Schedule
@@ -13,26 +12,25 @@ class ScheduleService:
         self.repository = repository
 
     @staticmethod
-    async def model_dump(db_model: Schedule, dto_model: ScheduleDTO = ScheduleModel) -> ScheduleRowModel:
+    async def model_dump(
+        db_model: Schedule, dto_model: ScheduleDTO = ScheduleModel
+    ) -> ScheduleRowModel:
         return dto_model.model_validate(db_model, from_attributes=True)
 
     @staticmethod
     async def get_date(year: int, week: int) -> list[datetime]:
-        start_day = datetime.strptime(f'{year}-{week}-1', "%Y-%W-%w").date()
+        start_day = datetime.strptime(f"{year}-{week}-1", "%Y-%W-%w").date()
         end_day = start_day + timedelta(days=5)
         return start_day, end_day
 
     async def dump_schedules(
-        self,
-        schedules: list[Schedule],
-        dto_model: ScheduleDTO = ScheduleModel
+        self, schedules: list[Schedule], dto_model: ScheduleDTO = ScheduleModel
     ) -> list[ScheduleDTO]:
         return [await self.model_dump(schedules, dto_model) for schedules in schedules]
 
     async def get_student_schedule(
         self,
-        student_id:
-        UUID4,
+        student_id: UUID4,
         year: int,
         week: int,
     ) -> list[ScheduleDTO]:
@@ -53,6 +51,7 @@ class ScheduleService:
         dumped_schedule_rows = await self.dump_schedules(schedule_rows, ScheduleRowModel)
 
         return dumped_schedule_rows
+
 
 # async def upload_homework_files(self, homework_id: int, files: list[UploadFile]):
 #     files = [str(await file.read()) for file in files]

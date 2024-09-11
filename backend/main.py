@@ -8,9 +8,13 @@ from api.auth import get_current_user
 
 PROTECTED = Depends(get_current_user)
 
-app = FastAPI(
-    openapi_url='/openapi.json'
-)
+
+async def lifespan(app: FastAPI):
+    # await init_classes()
+    yield
+
+
+app = FastAPI(openapi_url="/openapi.json", lifespan=lifespan)
 
 
 app.include_router(auth_router)
@@ -21,10 +25,7 @@ app.include_router(student_router, dependencies=[PROTECTED])
 app.include_router(manager_router, dependencies=[PROTECTED])
 
 
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173"
-]
+origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
 
 app.add_middleware(
     CORSMiddleware,

@@ -13,14 +13,13 @@ class ClassService:
     async def model_dump(db_model: Class, dto_model: ClassDTO) -> ClassDTO:
         return dto_model.model_validate(db_model, from_attributes=True)
 
-    async def dump_classes(self, classes: list[Class], dto_model: ClassDTO) -> list[ClassDTO]:
+    async def dump_classes(
+        self, classes: list[Class], dto_model: ClassDTO
+    ) -> list[ClassDTO]:
         return [await self.model_dump(cls, dto_model) for cls in classes]
 
     async def get_class(
-        self,
-        class_id: UUID4,
-        dto_model: ClassDTO = None,
-        dump: bool = False
+        self, class_id: UUID4, dto_model: ClassDTO = None, dump: bool = False
     ) -> Class | ClassDTO:
         cls = await self.repository.get_one(class_id)
         return await self.model_dump(cls, dto_model) if dump else cls
@@ -37,4 +36,3 @@ class ClassService:
 
     async def add_class(self, form: AddClassModel):
         await self.repository.add_item(form.model_dump())
-

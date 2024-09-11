@@ -1,5 +1,4 @@
 from pydantic import UUID4
-from sqlalchemy import select
 
 from .base import SqlAlchemyRepository
 from database.models import Class, Teacher
