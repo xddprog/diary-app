@@ -55,6 +55,12 @@ subjects_names = [
     "Физика",
     "Физическая культура",
     "Программирование",
+    "Химия",
+    "Биология",
+    "География",
+    "Иностранный язык",
+    "Литература",
+    "Музыка",
 ]
 homeworks = [
     "Прочитать текст и написать краткое изложение",
@@ -153,10 +159,10 @@ def init_students(subjects: list[Subject]):
             age=choice(range(16, 20)),
             role=2,
             school=sch_id,
-            register_code=uuid4(),
+            register_code=uuid4()
         )
         students.append(student)
-
+            
     for subject in subjects:
         user_id = uuid4()
         name = choice(names)
@@ -192,8 +198,12 @@ async def init_classes():
         schedules = await init_schedules_data(subjects, students)
         session.add_all(schedules)
 
-        for i in range(len(students)):
-            students[i].subjects = subjects
+        for i, student in enumerate(students):
+            try:
+                student.subjects.append(subjects[i])
+            except IndexError:
+                pass
+            
 
         m_i = 0
         for student in students:
@@ -203,7 +213,7 @@ async def init_classes():
                 m_i += marks_count
                 subject.marks = new_marks
                 student.marks.extend(new_marks)
-
+        
         number = [10, 10, 10, 11, 11, 11]
         words = ["А", "Б", "В", "А", "Б", "В"]
         classes = []

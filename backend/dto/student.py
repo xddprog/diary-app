@@ -1,6 +1,7 @@
+from datetime import datetime
 from uuid import uuid4
 
-from pydantic import BaseModel, UUID4, Field
+from pydantic import BaseModel, UUID4, Field, field_validator
 from dto.person import Person
 
 
@@ -22,4 +23,28 @@ class UpdateStudentModel(BaseModel):
     subjects: list[int] | None = None
 
 
-type StudentDTO = StudentModel | UpdateStudentModel | AddStudentModel
+class StudentRatingModel(BaseModel):
+    name: str
+    surname: str
+    middle_name: str
+    student_class: str | None
+    average_mark: float
+
+
+class GetRatingForm(BaseModel):
+    subjects: list[int] | None = None
+    classes: list[UUID4] | None = None
+    year: int | None
+
+    @field_validator("year")
+    def validate_year(cls, v):
+        return datetime.now().year if not v else v
+
+
+type StudentDTO = (
+    StudentModel
+    | UpdateStudentModel
+    | AddStudentModel
+    | StudentRatingModel
+    | GetRatingForm
+)

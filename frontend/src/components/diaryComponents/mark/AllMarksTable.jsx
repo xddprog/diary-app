@@ -6,14 +6,12 @@ import styled from "styled-components";
 
 function QuarterMarksRow({marks, average}) {
     return (
-        <FlexRow>
-            <div
-                style={{display: 'flex', marginRight: '15px'}}
-            >
-                {marks.map(item => <p style={{marginRight: '10px'}}>{item.mark_value}</p>)}
-            </div>
-            <div><p style={{fontSize: '15px', fontWeight: '500', color: '#1677ff'}}>{average.toFixed(2)}</p></div>
-        </FlexRow>
+        <StyledMarksRow>
+            <StyledMarksBlock>
+                {marks.map(item => <StyledMark>{item.mark_value}</StyledMark>)}
+            </StyledMarksBlock>
+            <div><StyledAverageMark>{average.toFixed(2)}</StyledAverageMark></div>
+        </StyledMarksRow>
     )
 }
 
@@ -105,4 +103,23 @@ const StyledTable = styled(Table)`
 
 const StyledParagrapg = styled.p`
     color: black;
+`
+
+const StyledMarksRow = styled(FlexRow)`
+    justify-content: space-between;
+`
+
+
+const StyledMarksBlock = styled.div`
+    display: flex;
+`
+
+const StyledMark = styled.p`
+    margin-right: 10px;
+`
+
+const StyledAverageMark = styled.p`
+    font-size: 15px;
+    font-weight: 500;
+    color: #1677ff
 `

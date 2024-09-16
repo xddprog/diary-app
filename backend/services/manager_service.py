@@ -21,4 +21,6 @@ class ManagerService:
         return manager
 
     async def get_by_email(self, email: str) -> Manager:
-        return await self.repository.get_by_attribute(self.repository.model.email, email)
+        return await self.repository.get_by_attribute(
+            self.repository.model.email, email
+        )

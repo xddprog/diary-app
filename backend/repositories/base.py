@@ -73,11 +73,17 @@ class SqlAlchemyRepository(BaseRepository):
 
     async def update(self, item_id: int, kwargs):
         async with self.session_factory() as session:
-            query = update(self.model).where(self.model.id == item_id).values(kwargs)
+            query = (
+                update(self.model)
+                .where(self.model.id == item_id)
+                .values(kwargs)
+            )
             await session.execute(query)
             await session.commit()
 
-    async def update_by_attribute(self, item_id: UUID4, attribute, value: str | UUID4):
+    async def update_by_attribute(
+        self, item_id: UUID4, attribute, value: str | UUID4
+    ):
         async with self.session_factory() as session:
             query = (
                 update(self.model)

@@ -1,4 +1,6 @@
 import axios from "axios";
+import { BASE_API_URL } from "../utils/constants";
+
 
 
 function getItem(label, key, icon, children, type) {
@@ -13,7 +15,7 @@ function getItem(label, key, icon, children, type) {
 
 
 export async function getSubjectsOptions() {
-    return await axios.get('http://localhost:5000/subjects/all', {
+    return await axios.get(`${BASE_API_URL}/subjects/all`, {
         headers: {
             Authorization:"Bearer " + localStorage.getItem("token")
         }
@@ -30,7 +32,7 @@ export async function getSubjectsOptions() {
 
 
 export async function addNewSubject(values) {
-    return await axios.post('http://localhost:5000/subjects/add', values, {
+    return await axios.post(`${BASE_API_URL}/subjects/add`, values, {
         headers: {
             Authorization:"Bearer " + localStorage.getItem("token")
         }

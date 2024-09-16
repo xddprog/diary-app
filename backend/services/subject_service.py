@@ -11,7 +11,9 @@ class SubjectService:
     async def model_dump(model: Subject) -> BaseSubjectModel:
         return BaseSubjectModel.model_validate(model, from_attributes=True)
 
-    async def dump_subjects(self, subjects: list[Subject]) -> list[BaseSubjectModel]:
+    async def dump_subjects(
+        self, subjects: list[Subject]
+    ) -> list[BaseSubjectModel]:
         return [await self.model_dump(subject) for subject in subjects]
 
     async def get_subject(

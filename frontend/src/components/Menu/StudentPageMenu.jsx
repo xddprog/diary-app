@@ -36,7 +36,7 @@ export default function StudentPageMenu() {
             ]
         },
         {
-            label: 'Рейтинг',
+            label: <Link to="rating">Рейтинг</Link>,
             key: 'rating'
         },
         {
@@ -56,11 +56,11 @@ export default function StudentPageMenu() {
             ),
             children: [
                 {
-                    key: 'studentProfile',
-                    label: 'Профиль'
+                    key: 'profile',
+                    label: <Link to='profile'>Профиль</Link>
                 },
                 {
-                    key: 'logOut',
+                    key: 'logout',
                     label: 'Выйти'
                 }
             ]

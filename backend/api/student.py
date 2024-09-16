@@ -6,7 +6,12 @@ from starlette import status
 from starlette.responses import JSONResponse
 
 from dto.schedule import ScheduleModel, ScheduleRowModel
-from dto.student import StudentModel, AddStudentModel, UpdateStudentModel
+from dto.student import (
+    GetRatingForm,
+    StudentModel,
+    AddStudentModel,
+    UpdateStudentModel,
+)
 from services import StudentService, ClassService, ScheduleService
 from utils.dependencies import (
     get_student_service,
@@ -18,6 +23,14 @@ router = APIRouter(
     tags=["students"],
     prefix="/students",
 )
+
+
+@router.post("/rating")
+async def get_students_rating(
+    students_service: Annotated[StudentService, Depends(get_student_service)],
+    form: GetRatingForm,
+):
+    return await students_service.get_students_rating(**form.model_dump())
 
 
 @router.post("/add")
@@ -62,12 +75,16 @@ async def update_student(
     student_service: Annotated[StudentService, Depends(get_student_service)],
 ):
     await student_service.update_student(student_id, form)
-    return JSONResponse(status_code=200, content={"message": "Student edit successfully"})
+    return JSONResponse(
+        status_code=200, content={"message": "Student edit successfully"}
+    )
 
 
 @router.get("/{student_id}/schedule/{year}/{week}")
 async def get_student_schedule(
-    schedule_service: Annotated[ScheduleService, Depends(get_schedule_service)],
+    schedule_service: Annotated[
+        ScheduleService, Depends(get_schedule_service)
+    ],
     student_id: UUID4,
     year: int,
     week: int,
@@ -77,12 +94,16 @@ async def get_student_schedule(
 
 @router.get("/{student_id}/schedule/{year}/{week}/rows")
 async def get_student_schedule_rows(
-    schedule_service: Annotated[ScheduleService, Depends(get_schedule_service)],
+    schedule_service: Annotated[
+        ScheduleService, Depends(get_schedule_service)
+    ],
     student_id: UUID4,
     year: int,
     week: int,
 ) -> list[ScheduleRowModel]:
-    return await schedule_service.get_student_schedule_rows(student_id, year, week)
+    return await schedule_service.get_student_schedule_rows(
+        student_id, year, week
+    )
 
 
 @router.get("/{student_id}/marks/{year}/all")

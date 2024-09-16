@@ -1,9 +1,9 @@
 import axios from "axios";
-import Teacher from "../components/TeacherComponents/Teacher.jsx";
+import { BASE_API_URL } from "../utils/constants";
 
 
 export async function getFreeTeachers() {
-    return await axios.get(`http://localhost:5000/teachers/free`, {
+    return await axios.get(`${BASE_API_URL}/teachers/free`, {
         headers: {
             Authorization:"Bearer " + localStorage.getItem("token")
         }
@@ -14,7 +14,7 @@ export async function getFreeTeachers() {
 
 
 export async function getTeachers(subjectId) {
-    return await axios.get(`http://localhost:5000/teachers/${subjectId}`, {
+    return await axios.get(`${BASE_API_URL}/teachers/${subjectId}`, {
         headers: {
             Authorization:"Bearer " + localStorage.getItem("token")
         }
@@ -22,7 +22,7 @@ export async function getTeachers(subjectId) {
 }
 
 export async function deleteTeacher(teacherId) {
-    return await axios.delete(`http://localhost:5000/teachers/${teacherId}`, {
+    return await axios.delete(`${BASE_API_URL}/teachers/${teacherId}`, {
         headers: {
             Authorization:"Bearer " + localStorage.getItem("token")
         }
@@ -32,7 +32,7 @@ export async function deleteTeacher(teacherId) {
 }
 
 export async function addNewTeacher(values){
-    return await axios.post('http://localhost:5000/teachers/add', values, {
+    return await axios.post(`${BASE_API_URL}/teachers/add`, values, {
         headers: {
             Authorization:"Bearer " + localStorage.getItem("token")
         }
@@ -42,7 +42,7 @@ export async function addNewTeacher(values){
 }
 
 export async function updateTeacher(values, teacherId){
-    return await axios.put(`http://localhost:5000/teachers/${teacherId}`, values, {
+    return await axios.put(`${BASE_API_URL}/teachers/${teacherId}`, values, {
         headers: {
             Authorization:"Bearer " + localStorage.getItem("token")
         }

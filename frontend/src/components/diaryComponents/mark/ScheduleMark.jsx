@@ -19,13 +19,16 @@ export default function Marks({marks}) {
 }
 
 
-const MarksContainer = styled(FlexRow)`
+const MarksContainer = styled.div`
     width: 30px;
+    display: flex;
+    align-items: start;
+    justify-content: start;
 `
 
 const MarksWrapper = styled.div`
     padding: 5px 10px;
     border: #e5e7eb solid 1px;
     margin-right: 10px;
-    border-radius: 0px
+    border-radius: 0px;
 `

@@ -5,7 +5,7 @@ import {getStudentAllMarks} from "../../../api/students.jsx";
 import styled from "styled-components";
 
 
-export default function AllMarks(){
+export default function AllMarks() {
     const [subjects, setSubjects] = useState([]);
 
     useEffect(() => {

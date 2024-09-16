@@ -13,6 +13,8 @@ import dayjs from "dayjs";
 import updateLocale from 'dayjs/plugin/updateLocale';
 import Homeworks from "./components/diaryComponents/homework/Homeworks.jsx";
 import AllMarks from "./components/diaryComponents/mark/AllMarks.jsx";
+import StudentProfile from './components/StudentComponents/StudentProfile.jsx'
+import StudentRatings from './components/StudentComponents/StudentRatings.jsx'
 
 
 dayjs.extend(updateLocale)
@@ -32,6 +34,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route path="diary" element={<Schedule />} />
                     <Route path="homeworks" element={<Homeworks />}/>
                     <Route path="all_marks" element={<AllMarks />} />
+                    <Route path="profile" element={<StudentProfile />}/>
+                    <Route path="rating" element={<StudentRatings />}/>
                 </Route>
             </Routes>
         </BrowserRouter>

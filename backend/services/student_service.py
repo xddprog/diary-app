@@ -13,6 +13,7 @@ from dto.student import (
     StudentDTO,
     StudentModel,
     AddStudentModel,
+    StudentRatingModel,
     UpdateStudentModel,
 )
 import utils.errors.student_errors as errors
@@ -25,13 +26,17 @@ class StudentService:
         self.repository = repository
 
     @staticmethod
-    async def model_dump(db_model: Student, dto_model: StudentDTO) -> StudentDTO:
+    async def model_dump(
+        db_model: Student, dto_model: StudentDTO
+    ) -> StudentDTO:
         return dto_model.model_validate(db_model, from_attributes=True)
 
     async def dump_students(
         self, students: list[Student], dto_model: StudentDTO = StudentModel
     ) -> list[StudentDTO]:
-        return [await self.model_dump(student, dto_model) for student in students]
+        return [
+            await self.model_dump(student, dto_model) for student in students
+        ]
 
     async def get_student(
         self,
@@ -42,7 +47,9 @@ class StudentService:
         student = await self.repository.get_one(student_id)
         return await self.model_dump(student, dto_model) if dump else student
 
-    async def get_students_from_class(self, class_id: UUID4) -> list[StudentModel]:
+    async def get_students_from_class(
+        self, class_id: UUID4
+    ) -> list[StudentModel]:
         students = await self.repository.get_by_attribute(
             self.repository.model.student_class, class_id
         )
@@ -77,7 +84,9 @@ class StudentService:
         await self.repository.update(student_id, form)
 
     async def get_by_email(self, email: str) -> Student:
-        return await self.repository.get_by_attribute(self.repository.model.email, email)
+        return await self.repository.get_by_attribute(
+            self.repository.model.email, email
+        )
 
     @staticmethod
     async def filter_student_marks(
@@ -91,7 +100,9 @@ class StudentService:
         filtered_marks = filter(filter_func, subject.marks)
         return list(
             map(
-                lambda mark: BaseMarkModel.model_validate(mark, from_attributes=True),
+                lambda mark: BaseMarkModel.model_validate(
+                    mark, from_attributes=True
+                ),
                 filtered_marks,
             )
         )
@@ -99,12 +110,16 @@ class StudentService:
     async def get_all_student_marks(
         self, student_id: UUID4, year: int
     ) -> AllSubjectsMarksModel:
-        subjects = await self.repository.get_all_student_marks(student_id, year)
+        subjects = await self.repository.get_all_student_marks(
+            student_id, year
+        )
         model = AllSubjectsMarksModel(subjects=[])
 
         for subject in subjects:
             subject_marks = [
-                await self.filter_student_marks(student_id, quarter, year, subject)
+                await self.filter_student_marks(
+                    student_id, quarter, year, subject
+                )
                 for quarter in range(1, 5)
             ]
             all_quarter_models = []
@@ -116,7 +131,9 @@ class StudentService:
                         average=round(sum(marks_values) / len(marks), 2),
                     )
                 else:
-                    quarter_model = QuarterMarksModel(marks=marks, average=0.00)
+                    quarter_model = QuarterMarksModel(
+                        marks=marks, average=0.00
+                    )
                 all_quarter_models.append(quarter_model)
 
             all_marks = [
@@ -137,3 +154,84 @@ class StudentService:
             model.subjects.append(subject_model)
 
         return model
+
+    async def get_students_rating(
+        self,
+        subjects: list[int] | None,
+        classes: list[UUID4] | None,
+        year: int | None,
+    ) -> list[StudentRatingModel]:
+        students: list[Student] = await self.repository.get_all()
+        rating = []
+
+        for student in students:
+            student_avg_mark = 0
+            student_subjects = [subject.id for subject in student.subjects]
+
+            if subjects and classes:
+                if (
+                    student.student_class
+                    and student.student_class.id in classes
+                    and any(
+                        subject in student_subjects for subject in subjects
+                    )
+                ):
+                    marks = [
+                        mark.mark_value
+                        for mark in student.marks
+                        if mark.subject.id in subjects
+                        and mark.date.year == year
+                    ]
+                    student_avg_mark = (
+                        round(sum(marks) / len(marks), 2) if marks else 0
+                    )
+            elif subjects:
+                if any(subject in student_subjects for subject in subjects):
+                    marks = [
+                        mark.mark_value
+                        for mark in student.marks
+                        if mark.subject.id in subjects
+                        and mark.date.year == year
+                    ]
+                    student_avg_mark = (
+                        round(sum(marks) / len(marks), 2) if marks else 0
+                    )
+            elif classes:
+                if (
+                    student.student_class
+                    and student.student_class.id in classes
+                ):
+                    marks = [
+                        mark.mark_value
+                        for mark in student.marks
+                        if mark.date.year == year
+                    ]
+                    student_avg_mark = (
+                        round(sum(marks) / len(marks), 2) if marks else 0
+                    )
+            else:
+                marks = [
+                    mark.mark_value
+                    for mark in student.marks
+                    if mark.date.year == year
+                ]
+                student_avg_mark = (
+                    round(sum(marks) / len(marks), 2) if marks else 0
+                )
+
+            if student_avg_mark != 0:
+                rating.append(
+                    StudentRatingModel(
+                        name=student.name,
+                        surname=student.surname,
+                        middle_name=student.middle_name,
+                        student_class=f"{student.student_class.class_number} {student.student_class.class_word}"
+                        if student.student_class
+                        else None,
+                        average_mark=student_avg_mark,
+                    )
+                )
+
+        rating.sort(key=lambda x: x.average_mark, reverse=True)
+
+        return rating

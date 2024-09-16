@@ -117,7 +117,8 @@ class Subject(Base):
     students: Mapped[list['Student']] = relationship(
         back_populates='subjects',
         secondary='student_subjects',
-        uselist=False
+        uselist=False,
+        lazy='selectin'
     )
     marks: Mapped[list['Mark']] = relationship(
         back_populates='subject',
@@ -172,6 +173,7 @@ class Student(Base, Person):
     student_class: Mapped['Class'] = relationship(
         back_populates='students',
         uselist=False,
+        lazy='selectin'
     )
     schedules_rows: Mapped[list['ScheduleRow']] = relationship(
         back_populates='students',

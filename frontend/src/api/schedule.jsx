@@ -1,7 +1,9 @@
 import axios from "axios";
+import { BASE_API_URL } from "../utils/constants";
+
 
 export async function getStudentSchedule(year, week){
-    const url = `http://localhost:5000/students/${localStorage.getItem('user_id')}/schedule/${year}/${week}`
+    const url = `${BASE_API_URL}/students/${localStorage.getItem('user_id')}/schedule/${year}/${week}`
 
     return await axios.get(url, {
         headers: {
@@ -13,7 +15,7 @@ export async function getStudentSchedule(year, week){
 }
 
 export async function getStudentScheduleRows(year, week){
-    const url = `http://localhost:5000/students/${localStorage.getItem('user_id')}/schedule/${year}/${week}/rows`
+    const url = `${BASE_API_URL}/students/${localStorage.getItem('user_id')}/schedule/${year}/${week}/rows`
 
     return await axios.get(url, {
         headers: {
@@ -32,7 +34,7 @@ export async function sendHomework(homeworkId, files){
         formData.append("files", file)
     })
 
-    return await axios.post(`http://localhost:5000/students/${studentId}/homework/${homeworkId}`,formData, {
+    return await axios.post(`${BASE_API_URL}/students/${studentId}/homework/${homeworkId}`,formData, {
         headers: {
             Authorization:"Bearer " + localStorage.getItem("token"),
             'content-type': 'multipart/form-data'

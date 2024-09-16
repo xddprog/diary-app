@@ -60,3 +60,33 @@ class StudentRepository(SqlAlchemyRepository):
             query = select(Subject).where(Subject.students.has(id=student_id))
             subjects = await session.execute(query)
             return subjects.scalars().all()
+
+    # async def get_students_rating(
+    #     self,
+    #     subjects: list[int] | None,
+    #     classes: list[UUID4] | None,
+    #     year: int | None,
+    # ) -> list[Student]:
+    #     async with self.session_factory() as session:
+    #         query = select(Mark).join(Student).group_by(Student)
+    #         if classes and subjects:
+    #             query = query.where(
+    #                 Mark.id,
+    #                 Student.class_fk.in_(classes),
+    #                 OVERLAP(Student.subjects, array(subjects)),
+    #                 extract("year", Mark.date) == year,
+    #             )
+    #         elif subjects:
+    #             query = query.where(
+    #                 Mark.id,
+    #                 OVERLAP(Student.subjects, array(subjects)),
+    #                 extract("year", Mark.date) == year
+    #             )
+    #         elif classes:
+    #             query = query.where(
+    #                 Mark.id,
+    #                 Student.class_fk.in_(classes),
+    #                 extract("year", Mark.date) == year,
+    #             )
+    #         students = await session.execute(query)
+    #         return students.scalars().all()

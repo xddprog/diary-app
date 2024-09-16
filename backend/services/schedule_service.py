@@ -26,7 +26,10 @@ class ScheduleService:
     async def dump_schedules(
         self, schedules: list[Schedule], dto_model: ScheduleDTO = ScheduleModel
     ) -> list[ScheduleDTO]:
-        return [await self.model_dump(schedules, dto_model) for schedules in schedules]
+        return [
+            await self.model_dump(schedules, dto_model)
+            for schedules in schedules
+        ]
 
     async def get_student_schedule(
         self,
@@ -36,7 +39,9 @@ class ScheduleService:
     ) -> list[ScheduleDTO]:
         dates = await self.get_date(year, week)
 
-        schedules = await self.repository.get_student_schedule(student_id, *dates)
+        schedules = await self.repository.get_student_schedule(
+            student_id, *dates
+        )
         dumped_schedules = await self.dump_schedules(schedules)
 
         return dumped_schedules
@@ -44,11 +49,17 @@ class ScheduleService:
     async def get_student_schedule_rows(self, student_id, year, week):
         dates = await self.get_date(year, week)
 
-        schedules = await self.repository.get_student_schedule(student_id, *dates)
-        schedule_rows = [row for schedule in schedules for row in schedule.rows]
+        schedules = await self.repository.get_student_schedule(
+            student_id, *dates
+        )
+        schedule_rows = [
+            row for schedule in schedules for row in schedule.rows
+        ]
         schedule_rows.sort(key=lambda x: x.subject.subject_name)
 
-        dumped_schedule_rows = await self.dump_schedules(schedule_rows, ScheduleRowModel)
+        dumped_schedule_rows = await self.dump_schedules(
+            schedule_rows, ScheduleRowModel
+        )
 
         return dumped_schedule_rows
 

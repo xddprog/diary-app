@@ -14,7 +14,9 @@ class TeacherService:
     async def model_dump(model: Teacher) -> BaseTeacherModel:
         return BaseTeacherModel.model_validate(model, from_attributes=True)
 
-    async def dump_teachers(self, teachers: list[Teacher]) -> list[BaseTeacherModel]:
+    async def dump_teachers(
+        self, teachers: list[Teacher]
+    ) -> list[BaseTeacherModel]:
         return [await self.model_dump(teacher) for teacher in teachers]
 
     async def get_all_teachers(self) -> list[Teacher]:
@@ -37,7 +39,9 @@ class TeacherService:
         teacher = await self.repository.get_one(teacher_id)
         return self.model_dump(teacher) if dump else teacher
 
-    async def update_teacher(self, teacher_id: UUID4, update_data: UpdateTeacherModel):
+    async def update_teacher(
+        self, teacher_id: UUID4, update_data: UpdateTeacherModel
+    ):
         await self.repository.update(
             teacher_id, update_data.model_dump(exclude_none=True)
         )
@@ -54,4 +58,6 @@ class TeacherService:
         await self.repository.update(teacher_id, form)
 
     async def get_by_email(self, email: str) -> Teacher:
-        return await self.repository.get_by_attribute(self.repository.model.email, email)
+        return await self.repository.get_by_attribute(
+            self.repository.model.email, email
+        )
