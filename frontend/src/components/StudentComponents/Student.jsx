@@ -22,10 +22,6 @@ export default function Student({student, handlerStudents, classId}){
             <StyledCard
                 title={`${student.name} ${student.surname} ${student.middle_name}`}
                 bordered={false}
-                style={{
-                    width: "750px",
-                    marginTop: "15px"
-                }}
                 extra={
                     <div>
                         <Button

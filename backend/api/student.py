@@ -24,6 +24,13 @@ router = APIRouter(
     prefix="/students",
 )
 
+@router.get('/{student_id}/profile')
+async def get_student_profile(
+    student_id: UUID4,
+    students_service: Annotated[StudentService, Depends(get_student_service)],
+):
+    return await students_service.get_student(student_id, StudentModel, dump=True)
+
 
 @router.post("/rating")
 async def get_students_rating(

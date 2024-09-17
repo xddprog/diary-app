@@ -155,6 +155,26 @@ class StudentService:
 
         return model
 
+    @staticmethod
+    async def average_mark_with_subjects(
+        student: list[Student], year: int, subjects: list[int]
+    ) -> float:
+        marks = [
+            mark.mark_value
+            for mark in student.marks
+            if mark.subject.id in subjects and mark.date.year == year
+        ]
+        return round(sum(marks) / len(marks), 2) if marks else 0
+
+    @staticmethod
+    async def average_mark_without_filters(
+        student: list[Student], year: int
+    ) -> float:
+        marks = [
+            mark.mark_value for mark in student.marks if mark.date.year == year
+        ]
+        return round(sum(marks) / len(marks), 2) if marks else 0
+
     async def get_students_rating(
         self,
         subjects: list[int] | None,
@@ -176,47 +196,26 @@ class StudentService:
                         subject in student_subjects for subject in subjects
                     )
                 ):
-                    marks = [
-                        mark.mark_value
-                        for mark in student.marks
-                        if mark.subject.id in subjects
-                        and mark.date.year == year
-                    ]
-                    student_avg_mark = (
-                        round(sum(marks) / len(marks), 2) if marks else 0
+                    student_avg_mark = await self.average_mark_with_subjects(
+                        student, year, subjects
                     )
+
             elif subjects:
                 if any(subject in student_subjects for subject in subjects):
-                    marks = [
-                        mark.mark_value
-                        for mark in student.marks
-                        if mark.subject.id in subjects
-                        and mark.date.year == year
-                    ]
-                    student_avg_mark = (
-                        round(sum(marks) / len(marks), 2) if marks else 0
+                    student_avg_mark = await self.average_mark_with_subjects(
+                        student, year, subjects
                     )
             elif classes:
                 if (
                     student.student_class
                     and student.student_class.id in classes
                 ):
-                    marks = [
-                        mark.mark_value
-                        for mark in student.marks
-                        if mark.date.year == year
-                    ]
-                    student_avg_mark = (
-                        round(sum(marks) / len(marks), 2) if marks else 0
+                    student_avg_mark = await self.average_mark_without_filters(
+                        student, year
                     )
             else:
-                marks = [
-                    mark.mark_value
-                    for mark in student.marks
-                    if mark.date.year == year
-                ]
-                student_avg_mark = (
-                    round(sum(marks) / len(marks), 2) if marks else 0
+                student_avg_mark = await self.average_mark_without_filters(
+                    student, year
                 )
 
             if student_avg_mark != 0:

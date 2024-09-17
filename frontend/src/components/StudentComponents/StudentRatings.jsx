@@ -34,6 +34,9 @@ export default function StudentRatings() {
                 }
             }))
         )
+        getStudentsRating().then(response => setStudents(
+            response.data
+        ))
     }, [])
 
     async function handleSubmit() {

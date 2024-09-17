@@ -1,6 +1,7 @@
 import {Button, Form, Input, InputNumber, Modal, Select, Space, Typography} from "antd";
 import {useState} from "react";
 import {addStudent, getStudents} from "../../api/students.jsx";
+import styled from "styled-components";
 
 
 function AddStudentModal({classId, modalIsOpen, handler, subjectOptions, handlerStudents}) {
@@ -153,19 +154,15 @@ function AddNewStudent({classId, subjectOptions, handlerStudents}) {
     }
 
     return (
-        <Space
-            direction="horizontal"
-            style={{ width: '100%', justifyContent: 'center'}}
-        >
-            <Button
+        <StyledSpace direction="horizontal">
+            <StyledButton
                 type="primary"
-                style={{ marginTop: "15px", marginBottom: "15px"}}
                 onClick={() => {
                     setModalIsOpen(true)
                 }}
             >
                 Добавить ученика
-            </Button>
+            </StyledButton>
             <AddStudentModal
                 modalIsOpen={modalIsOpen}
                 handler={handleCancel}
@@ -173,8 +170,20 @@ function AddNewStudent({classId, subjectOptions, handlerStudents}) {
                 handlerStudents={handlerStudents}
                 classId={classId}
             />
-        </Space>
+        </StyledSpace>
     )
 }
 
 export default AddNewStudent
+
+
+const StyledSpace = styled(Space)`
+    justify-content: center;
+    width: 100%;
+`   
+
+
+const StyledButton = styled(Button)`
+    margin-top: 15px;
+    margin-bottom: 15px;
+`   

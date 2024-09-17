@@ -65,7 +65,7 @@ export default function EditStudentModal(
             <StyledSpace direction="vertical">
                  <Typography.Title level={1}>Отредактировать ученика</Typography.Title>
             </StyledSpace>
-            <Form
+            <StyledForm
                 form={form[0]}
                 layout="horizontal"
                 name="normal_login"
@@ -79,9 +79,6 @@ export default function EditStudentModal(
                 }}
                 wrapperCol={{
                     span: 18,
-                }}
-                style={{
-                    maxWidth: 600,
                 }}
             >
                 <Form.Item
@@ -167,7 +164,7 @@ export default function EditStudentModal(
                         })}
                     />
                 </Form.Item>
-            </Form>
+            </StyledForm>
         </Modal>
     )
 }
@@ -176,4 +173,8 @@ export default function EditStudentModal(
 const StyledSpace = styled(Space)`
     width: 100%;
     justify-content: center;
+`
+
+const StyledForm = styled(Form)`
+    width: 600px;
 `

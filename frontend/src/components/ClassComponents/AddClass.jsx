@@ -100,6 +100,5 @@ export default function AddClassModal({handler, handlerClasses, modalIsOpen}) {
 
 
 const StyledSpace = styled(Space)`
-    justify-content: center;
     width: 750px;
 `

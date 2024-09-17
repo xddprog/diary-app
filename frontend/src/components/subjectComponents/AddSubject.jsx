@@ -36,7 +36,7 @@ export default function AddSubjectModal({handler, handlerSubjects, modalIsOpen})
             ]}
         >
             <StyledSpace direction="horizontal">
-                <Typography.Title level={1} >Добавить класс</Typography.Title>
+                <Typography.Title level={1} >Добавить предмет</Typography.Title>
             </StyledSpace>
             <Form
                 form={form[0]}
@@ -76,6 +76,5 @@ export default function AddSubjectModal({handler, handlerSubjects, modalIsOpen})
 
 
 const StyledSpace = styled(Space)`
-    justify-content: center;
     width: 750px;
 `

@@ -1,4 +1,5 @@
 from datetime import datetime
+import email
 from uuid import uuid4
 
 from pydantic import BaseModel, UUID4, Field, field_validator
@@ -21,6 +22,9 @@ class UpdateStudentModel(BaseModel):
     age: int | None = None
     student_class: UUID4 | None = None
     subjects: list[int] | None = None
+    email: str | None = None
+    vk: str | None = None
+    telegram: str | None = None
 
 
 class StudentRatingModel(BaseModel):

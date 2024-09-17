@@ -117,7 +117,7 @@ export default function ManagerPageMenu(
 
 
 const StyledMenu = styled(Menu)`
-    width: 256;
+    width: 300px;
     height: 100vh;
     overflow: auto;
 `

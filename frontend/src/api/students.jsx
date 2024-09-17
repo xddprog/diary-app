@@ -68,3 +68,15 @@ export async function getStudentsRating({classes, subjects, year}) {
         response => response
     )
 }
+
+export async function getStudentProfile() {
+    const url = `${BASE_API_URL}/students/${localStorage.getItem('user_id')}/profile`
+
+    return await axios.get(url, {
+        headers: {
+            Authorization:"Bearer " + localStorage.getItem("token")
+        }
+    }).then(
+        response => response
+    )
+}
