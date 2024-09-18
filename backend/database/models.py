@@ -7,8 +7,6 @@ from pydantic import UUID4
 from sqlalchemy import ForeignKey, ARRAY, String
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped, relationship
 
-from database.connection import engine
-
 
 class Person:
     name: Mapped[str]

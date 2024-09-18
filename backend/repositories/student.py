@@ -5,60 +5,55 @@ from sqlalchemy.orm import selectinload
 from dto.student import UpdateStudentModel
 from .base import SqlAlchemyRepository
 from database.models import Student, Class, Subject
-from database.connection import session_factory
 
 
 class StudentRepository(SqlAlchemyRepository):
     model = Student
 
     async def get_students_from_class(self, class_id: UUID4):
-        async with self.session_factory() as session:
-            query = select(Student).where(Student.class_fk == class_id)
-            students = await session.execute(query)
-            return students.scalars().all()
+        query = select(Student).where(Student.class_fk == class_id)
+        students = await self.session.execute(query)
+        return students.scalars().all()
 
     async def delete(self, item_id: UUID4) -> None:
-        async with session_factory() as session:
-            query = (
-                select(self.model)
-                .where(self.model.id == item_id)
-                .options(
-                    selectinload(self.model.marks),
-                    selectinload(self.model.subjects),
-                )
+        query = (
+            select(self.model)
+            .where(self.model.id == item_id)
+            .options(
+                selectinload(self.model.marks),
+                selectinload(self.model.subjects),
             )
+        )
 
-            student = await session.execute(query)
-            student = student.scalar_one()
-            student.subjects = []
+        student = await self.session.execute(query)
+        student = student.scalar_one()
+        student.subjects = []
 
-            for mark in student.marks:
-                await session.delete(mark)
+        for mark in student.marks:
+            await self.session.delete(mark)
 
-            await session.commit()
+        await self.session.commit()
 
-            query = delete(self.model).where(self.model.id == item_id)
-            await session.execute(query)
-            await session.commit()
+        query = delete(self.model).where(self.model.id == item_id)
+        await self.session.execute(query)
+        await self.session.commit()
 
     async def update_with_cls_and_subjects(
         self, item_id: UUID4, update_data: UpdateStudentModel
     ) -> None:
-        async with self.session_factory() as session:
-            student = await session.get(Student, item_id)
-            if update_data.student_class:
-                cls = await session.get(Class, update_data.student_class)
-                student.student_class = cls
-            if update_data.subjects:
-                for subject_id in update_data.subjects:
-                    subject = await session.get(Subject, subject_id)
-                    student.subjects.append(subject)
-            await session.commit()
+        student = await self.session.get(Student, item_id)
+        if update_data.student_class:
+            cls = await self.session.get(Class, update_data.student_class)
+            student.student_class = cls
+        if update_data.subjects:
+            for subject_id in update_data.subjects:
+                subject = await self.session.get(Subject, subject_id)
+                student.subjects.append(subject)
+        await self.session.commit()
 
     async def get_all_student_marks(self, student_id: UUID4, year: int):
-        async with self.session_factory() as session:
             query = select(Subject).where(Subject.students.has(id=student_id))
-            subjects = await session.execute(query)
+            subjects = await self.session.execute(query)
             return subjects.scalars().all()
 
     # async def get_students_rating(

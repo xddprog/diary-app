@@ -32,9 +32,11 @@ class AuthService:
             )
             email = payload.get("email")
             role = payload.get("role")
+
             if email is None or role is None:
                 raise errors.InvalidToken()
-            return payload
+
+            return email
         except (jwt.exceptions.PyJWTError, AttributeError):
             raise errors.InvalidToken()
 

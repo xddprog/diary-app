@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 
 from pydantic import UUID4
 from sqlalchemy import select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.connection import session_factory
 from database.models import TypeModels
 
 
@@ -39,56 +39,51 @@ class BaseRepository(ABC):
 
 class SqlAlchemyRepository(BaseRepository):
     model: TypeModels = None
-    session_factory = session_factory
+    
+    def __init__(self, session: AsyncSession):
+        self.session = session
 
     async def get_one(self, item_id: int | UUID4) -> model:
-        async with self.session_factory() as session:
-            item = await session.get(self.model, item_id)
-            return item
+        item = await self.session.get(self.model, item_id)
+        return item
 
     async def get_all(self):
-        async with self.session_factory() as session:
-            query = select(self.model)
-            items = await session.execute(query)
-            return items.unique().scalars().all()
+        query = select(self.model)
+        items = await self.session.execute(query)
+        return items.unique().scalars().all()
 
     async def get_by_attribute(self, attribute, value: str | UUID4) -> model:
-        async with self.session_factory() as session:
-            query = select(self.model).where(attribute == value)
-            item = await session.execute(query)
-            return item.scalars().first()
+        query = select(self.model).where(attribute == value)
+        item = await self.session.execute(query)
+        return item.scalars().first()
 
     async def add_item(self, form):
-        async with self.session_factory() as session:
-            item = self.model(**form)
-            session.add(item)
-            await session.commit()
-            return item
+        item = self.model(**form)
+        self.session.add(item)
+        await self.session.commit()
+        return item
 
     async def delete(self, item_id: int | UUID4) -> None:
-        async with self.session_factory() as session:
-            deleting_item = await session.get(self.model, item_id)
-            await session.delete(deleting_item)
-            await session.commit()
+        deleting_item = await self.session.get(self.model, item_id)
+        await self.session.delete(deleting_item)
+        await self.session.commit()
 
     async def update(self, item_id: int, kwargs):
-        async with self.session_factory() as session:
-            query = (
-                update(self.model)
-                .where(self.model.id == item_id)
-                .values(kwargs)
-            )
-            await session.execute(query)
-            await session.commit()
+        query = (
+            update(self.model)
+            .where(self.model.id == item_id)
+            .values(kwargs)
+        )
+        await self.session.execute(query)
+        await self.session.commit()
 
     async def update_by_attribute(
         self, item_id: UUID4, attribute, value: str | UUID4
     ):
-        async with self.session_factory() as session:
-            query = (
-                update(self.model)
-                .where(self.model.id == item_id)
-                .values({attribute: value})
-            )
-            await session.execute(query)
-            await session.commit()
+        query = (
+            update(self.model)
+            .where(self.model.id == item_id)
+            .values({attribute: value})
+        )
+        await self.session.execute(query)
+        await self.session.commit()

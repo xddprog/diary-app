@@ -13,11 +13,10 @@ class ScheduleRepository(SqlAlchemyRepository):
     async def get_student_schedule(
         self, student_id: UUID4, start_day: datetime, end_day: datetime
     ) -> Schedule:
-        async with self.session_factory() as session:
-            query = (
-                select(Schedule)
-                .where(ScheduleRow.students.any(Student.id == student_id))
-                .filter(Schedule.date.between(start_day, end_day))
-            )
-            result = await session.execute(query)
-            return result.scalars().all()
+        query = (
+            select(Schedule)
+            .where(ScheduleRow.students.any(Student.id == student_id))
+            .filter(Schedule.date.between(start_day, end_day))
+        )
+        result = await self.session.execute(query)
+        return result.scalars().all()

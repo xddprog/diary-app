@@ -1,7 +1,5 @@
 from random import choice
 
-from database.connection import session_factory
-from database.connection import engine
 from database.models import *
 
 

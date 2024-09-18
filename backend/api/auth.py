@@ -12,6 +12,7 @@ from services import (
 )
 from utils.dependencies import (
     get_auth_service,
+    get_current_user,
     get_teacher_service,
     get_student_service,
     get_manager_service,
@@ -66,14 +67,6 @@ async def create_access_token(
         user = await manager_service.get_by_email(form.email)
     token = await auth_service.login_user(form.email, form.password, user)
     return TokenModel(token=token, user_role=user.role, user_id=user.id)
-
-
-async def get_current_user(
-    auth_service: Annotated[AuthService, Depends(get_auth_service)],
-    token: Annotated[HTTPBearer, Depends(bearer)],
-):
-    result = await auth_service.verify_token(token)
-    return result
 
 
 @router.get("/check")

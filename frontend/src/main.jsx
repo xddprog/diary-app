@@ -30,6 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/manager" element={<ManagerPage />} />
+                <Route path="/teacher" element={<TeacherPage />} />
                 <Route path="/student/*" element={<StudentPage />} >
                     <Route path="diary" element={<Schedule />} />
                     <Route path="homeworks" element={<Homeworks />}/>

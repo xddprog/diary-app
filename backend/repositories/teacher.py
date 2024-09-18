@@ -9,27 +9,26 @@ class TeacherRepository(SqlAlchemyRepository):
     model = Teacher
 
     async def update(self, teacher_id: UUID4, update_data: dict) -> None:
-        async with self.session_factory() as session:
-            subjects = update_data.get("subjects")
+        subjects = update_data.get("subjects")
 
-            if subjects:
-                teacher = await session.get(Teacher, teacher_id)
-                new_subjects = [
-                    await session.get(Subject, subject_id)
-                    for subject_id in update_data.subjects
-                ]
-                teacher.subjects = new_subjects
-                update_data.subjects = None
-                await session.commit()
+        if subjects:
+            teacher = await self.session.get(Teacher, teacher_id)
+            new_subjects = [
+                await self.session.get(Subject, subject_id)
+                for subject_id in update_data.subjects
+            ]
+            teacher.subjects = new_subjects
+            update_data.subjects = None
+            await self.session.commit()
 
-            if update_data:
-                query = (
-                    update(self.model)
-                    .where(self.model.id == teacher_id)
-                    .values(**update_data)
-                )
-                await session.execute(query)
-                await session.commit()
+        if update_data:
+            query = (
+                update(self.model)
+                .where(self.model.id == teacher_id)
+                .values(**update_data)
+            )
+            await self.session.execute(query)
+            await self.session.commit()
 
     #
     # async def get_by_register_code(self, register_code):

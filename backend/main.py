@@ -1,11 +1,14 @@
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer
 import uvicorn
 from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from api import *
-from api.auth import get_current_user
+from config import load_database_config
+from utils.dependencies import get_current_user
+from database.connection import DatabaseConnection
 from database.test_db import init_classes
 
 
@@ -14,6 +17,10 @@ PROTECTED = Depends(get_current_user)
 
 async def lifespan(app: FastAPI):
     # await init_classes()
+    app.state.db_connection = DatabaseConnection(load_database_config())
+    await app.state.db_connection.create_tables()
+    app.state.security = HTTPBearer(auto_error=False)
+
     yield
 
 
