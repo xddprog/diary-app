@@ -50,7 +50,7 @@ async def add_teacher(
     subject_service: Annotated[SubjectService, Depends(get_subject_service)],
 ) -> JSONResponse:
     form.subjects = [await subject_service.get_subject(form.subjects)]
-    await teacher_service.add_teacher(form)
+    await teacher_service.add_item(form)
     return JSONResponse(
         status_code=status.HTTP_201_CREATED,
         content={"message": "Teacher added successfully"},

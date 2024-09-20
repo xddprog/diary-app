@@ -17,10 +17,10 @@ PROTECTED = Depends(get_current_user)
 
 async def lifespan(app: FastAPI):
     # await init_classes()
+
     app.state.db_connection = DatabaseConnection(load_database_config())
     await app.state.db_connection.create_tables()
-    app.state.security = HTTPBearer(auto_error=False)
-
+    
     yield
 
 

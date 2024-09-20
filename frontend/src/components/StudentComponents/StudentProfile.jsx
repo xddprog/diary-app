@@ -47,14 +47,14 @@ export default function StudentProfile() {
             <Form.Item 
                 label="Почта"
                 name="email"
-                rules={[{ required: true, type: "email", message: "Неверная почта!" }]}
+                rules={[{ required: false, type: "email", message: "Неверная почта!" }]}
             >
                 <Input placeholder={student.email}/>
             </Form.Item>
-            <Form.Item label="Телеграмм">
+            <Form.Item label="Телеграмм" name="telegram">
                 <Input placeholder={student.telegram ?? "Не указан"}/>
             </Form.Item>
-            <Form.Item label="Вконтакте">
+            <Form.Item label="Вконтакте" name="vk">
                 <Input placeholder={student.vk ?? "Не указан"}/>
             </Form.Item>
             <Button type="primary" onClick={handleSubmit}>Сохранить</Button>

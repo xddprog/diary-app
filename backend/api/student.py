@@ -51,7 +51,7 @@ async def add_student(
 ) -> JSONResponse:
     cls = await class_service.get_class(form.student_class)
     form.student_class = cls
-    await students_service.add_student(form)
+    await students_service.add_item(form.model_dump(exclude_none=True))
     return JSONResponse(
         status_code=status.HTTP_201_CREATED,
         content={"message": "Student added successfully"},
@@ -84,6 +84,7 @@ async def update_student(
     form: UpdateStudentModel,
     student_service: Annotated[StudentService, Depends(get_student_service)],
 ):
+    print(form)
     await student_service.update_student(student_id, form)
     return JSONResponse(
         status_code=200, content={"message": "Student edit successfully"}

@@ -1,6 +1,9 @@
 import {styled} from 'styled-components'
 import { FlexColumn } from "../../components/BaseComponents.jsx";
 import LoginUser from "../../components/authComponents/LoginUser.jsx";
+import { useEffect } from 'react';
+import { checkUser } from '../../api/auth.jsx';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function RegisterPage() {

@@ -1,4 +1,5 @@
 from datetime import timedelta, datetime
+from typing import Awaitable, Callable
 
 import jwt
 from passlib.context import CryptContext
@@ -36,7 +37,7 @@ class AuthService:
             if email is None or role is None:
                 raise errors.InvalidToken()
 
-            return email
+            return payload
         except (jwt.exceptions.PyJWTError, AttributeError):
             raise errors.InvalidToken()
 
@@ -45,7 +46,10 @@ class AuthService:
     ) -> None:
         if user_registered:
             raise errors.UserAlreadyRegister()
+        
         form.hashed_password = self.context.hash(form.hashed_password)
+        form.registered = True
+        
         token = await self.create_token(email=form.email, role=form.role)
         return token
 

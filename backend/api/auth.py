@@ -25,8 +25,6 @@ router = APIRouter(
 )
 
 
-bearer = HTTPBearer(auto_error=False)
-
 
 @router.post("/register")
 async def register_user(
@@ -44,10 +42,12 @@ async def register_user(
         service = manager_service
     user = await service.check_by_register_code(form.register_code)
     token = await auth_service.register_user(form, user.registered)
-    form = form.model_dump(exclude_none=True)
-    form.update({"registered": True})
-    await service.update_registered(form, user.id)
 
+    form.registered = True
+    form = form.model_dump(exclude_none=True)
+
+    user = await service.update_registered(form, user.id)
+    
     return TokenModel(token=token, user_role=user.role, user_id=user.id)
 
 
@@ -58,7 +58,7 @@ async def create_access_token(
     teacher_service: Annotated[TeacherService, Depends(get_teacher_service)],
     student_service: Annotated[StudentService, Depends(get_student_service)],
     manager_service: Annotated[ManagerService, Depends(get_manager_service)],
-):
+):  
     if form.role == 1:
         user = await teacher_service.get_by_email(form.email)
     elif form.role == 2:
@@ -75,5 +75,6 @@ async def check_current_user(
     token_data=Depends(get_current_user),
     role=Header(),
 ):
+    print(role, token_data.get("role"))
     await auth_service.check_role(int(role), token_data.get("role"))
     return True

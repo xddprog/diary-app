@@ -15,6 +15,7 @@ import Homeworks from "./components/diaryComponents/homework/Homeworks.jsx";
 import AllMarks from "./components/diaryComponents/mark/AllMarks.jsx";
 import StudentProfile from './components/StudentComponents/StudentProfile.jsx'
 import StudentRatings from './components/StudentComponents/StudentRatings.jsx'
+import TeacherPage from './pages/teacherPages/TeacherPage.jsx'
 
 
 dayjs.extend(updateLocale)

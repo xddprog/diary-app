@@ -1,5 +1,6 @@
 from typing import Annotated
 
+from anyio.lowlevel import D
 from fastapi import Depends, Request
 from fastapi.security import HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,12 +9,11 @@ import services
 import repositories
 
 
+bearer = HTTPBearer(auto_error=False)
+
+
 async def get_session(request: Request) -> AsyncSession:
     return await request.app.state.db_connection.get_session()
-
-
-async def get_bearer_token(request: Request) -> HTTPBearer:
-    return request.state.bearer
 
 
 async def get_class_service(session: Annotated[AsyncSession, Depends(get_session)]):
@@ -47,7 +47,7 @@ async def get_schedule_service(session: Annotated[AsyncSession, Depends(get_sess
 
 async def get_current_user(
     auth_service: Annotated[services.AuthService, Depends(get_auth_service)],
-    token: Annotated[HTTPBearer, Depends(get_bearer_token)],
+    token: Annotated[HTTPBearer, Depends(bearer)],
 ) -> Student | Teacher | Manager:
-    email = await auth_service.verify_token(token)
-    return email
+    payload = await auth_service.verify_token(token)
+    return payload

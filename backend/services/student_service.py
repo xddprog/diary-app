@@ -58,8 +58,8 @@ class StudentService:
     async def delete_student(self, student_id: UUID4):
         await self.repository.delete(student_id)
 
-    async def add_student(self, form: AddStudentModel):
-        await self.repository.add_item(form.model_dump())
+    async def add_item(self, form: AddStudentModel):
+        await self.repository.add_item(form)
 
     async def update_student(
         self, student_id: UUID4, update_data: UpdateStudentModel
@@ -81,7 +81,9 @@ class StudentService:
         return student
 
     async def update_registered(self, form: dict, student_id: UUID4) -> None:
-        await self.repository.update(student_id, form)
+        student = await self.repository.update(student_id, form)
+        student = await self.repository.get_one(student_id)
+        return student
 
     async def get_by_email(self, email: str) -> Student:
         return await self.repository.get_by_attribute(
@@ -152,7 +154,7 @@ class StudentService:
             )
 
             model.subjects.append(subject_model)
-
+        
         return model
 
     @staticmethod

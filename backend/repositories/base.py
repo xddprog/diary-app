@@ -73,9 +73,13 @@ class SqlAlchemyRepository(BaseRepository):
             update(self.model)
             .where(self.model.id == item_id)
             .values(kwargs)
+            .returning(self.model)
         )
-        await self.session.execute(query)
+
+        item = await self.session.execute(query)
         await self.session.commit()
+
+        return item.scalars().all()[0]
 
     async def update_by_attribute(
         self, item_id: UUID4, attribute, value: str | UUID4
@@ -85,5 +89,6 @@ class SqlAlchemyRepository(BaseRepository):
             .where(self.model.id == item_id)
             .values({attribute: value})
         )
-        await self.session.execute(query)
+        item = await self.session.execute(query)
         await self.session.commit()
+        return item

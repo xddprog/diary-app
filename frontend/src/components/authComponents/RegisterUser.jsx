@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {LockOutlined, MailOutlined, NumberOutlined, SkypeOutlined, WhatsAppOutlined, UserOutlined} from '@ant-design/icons';
 import {Button, Form, Input, message, Select, Typography} from 'antd';
-import {registerUser} from "../../api/auth.jsx";
+import {checkUser, registerUser} from "../../api/auth.jsx";
 import {useNavigate} from "react-router-dom";
 import * as r from "antd";
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import styled from 'styled-components';
 
 function RegisterUser() {
     const navigate = useNavigate();
+    const [userStatus, setUserStatus] = useState(401);
     const [messageApi, contextHolder] = message.useMessage();
     const form = Form.useForm()
     const userTypes = [
@@ -38,6 +39,7 @@ function RegisterUser() {
     //     }}
     // );
 
+
     async function onFinish() {
         const values = await form[0].validateFields();
         try {
@@ -47,7 +49,7 @@ function RegisterUser() {
                 type: "success",
                 content: response.data.message
             });
-
+            
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("user_id", response.data.user_id);
 

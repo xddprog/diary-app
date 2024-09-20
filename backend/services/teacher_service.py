@@ -26,7 +26,7 @@ class TeacherService:
     async def delete_teacher(self, teacher_id: UUID4):
         return await self.repository.delete(teacher_id)
 
-    async def add_teacher(self, form: NewTeacherModel) -> Teacher:
+    async def add_item(self, form: NewTeacherModel) -> Teacher:
         await self.repository.add_item(form.model_dump())
 
     async def get_free_teachers(self) -> list[BaseTeacherModel]:
@@ -55,7 +55,8 @@ class TeacherService:
         return teacher
 
     async def update_registered(self, form: dict, teacher_id: UUID4) -> None:
-        await self.repository.update(teacher_id, form)
+        teacher = await self.repository.update(teacher_id, form)
+        return await self.model_dump(teacher)
 
     async def get_by_email(self, email: str) -> Teacher:
         return await self.repository.get_by_attribute(

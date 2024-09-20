@@ -1,7 +1,11 @@
 from random import choice
 
+from config import load_database_config
+from database.connection import DatabaseConnection
 from database.models import *
 
+
+db = DatabaseConnection(load_database_config())
 
 names = [
     "Мага",
@@ -110,15 +114,15 @@ async def init_schedules_data(subjects: list[Subject], students: list[Student]):
 
 
 async def init_school_and_roles():
-    async with session_factory() as session:
-        session.add(school)
-        await session.commit()
-        session.add(role_student)
-        session.add(role_teacher)
-        session.add(role_manager)
-        await session.commit()
-        session.add(manager)
-        await session.commit()
+    session = await db.get_session() 
+    session.add(school)
+    await session.commit()
+    session.add(role_student)
+    session.add(role_teacher)
+    session.add(role_manager)
+    await session.commit()
+    session.add(manager)
+    await session.commit()
 
 
 def init_marks():
@@ -184,49 +188,49 @@ def init_students(subjects: list[Subject]):
 async def init_classes():
     global school
 
-    async with engine.begin() as conn:
+    async with db._engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
     await init_school_and_roles()
 
-    async with session_factory() as session:
-        subjects = init_subjects()
-        students, teachers = init_students(subjects)
-        marks = init_marks()
-        schedules = await init_schedules_data(subjects, students)
-        session.add_all(schedules)
+    session = await db.get_session() 
+    subjects = init_subjects()
+    students, teachers = init_students(subjects)
+    marks = init_marks()
+    schedules = await init_schedules_data(subjects, students)
+    session.add_all(schedules)
 
-        for i, student in enumerate(students):
-            try:
-                student.subjects.append(subjects[i])
-            except IndexError:
-                pass
-            
-
-        m_i = 0
-        for student in students:
-            for subject in student.subjects:
-                marks_count = choice(range(1, 7))
-                new_marks = marks[m_i : m_i + marks_count]
-                m_i += marks_count
-                subject.marks = new_marks
-                student.marks.extend(new_marks)
+    for i, student in enumerate(students):
+        try:
+            student.subjects.append(subjects[i])
+        except IndexError:
+            pass
         
-        number = [10, 10, 10, 11, 11, 11]
-        words = ["А", "Б", "В", "А", "Б", "В"]
-        classes = []
-        for number, word, teacher in zip(number, words, teachers):
-            s = [students.pop() for i in range(10)]
-            _class = Class(
-                id=uuid4(),
-                class_number=number,
-                class_word=word,
-                classroom_teacher=teacher,
-                school=sch_id,
-            )
-            for i in s:
-                _class.students.append(i)
-                i.student_class = _class
-            classes.append(_class)
-        session.add_all(classes)
-        await session.commit()
+
+    m_i = 0
+    for student in students:
+        for subject in student.subjects:
+            marks_count = choice(range(1, 7))
+            new_marks = marks[m_i : m_i + marks_count]
+            m_i += marks_count
+            subject.marks = new_marks
+            student.marks.extend(new_marks)
+    
+    number = [10, 10, 10, 11, 11, 11]
+    words = ["А", "Б", "В", "А", "Б", "В"]
+    classes = []
+    for number, word, teacher in zip(number, words, teachers):
+        s = [students.pop() for i in range(10)]
+        _class = Class(
+            id=uuid4(),
+            class_number=number,
+            class_word=word,
+            classroom_teacher=teacher,
+            school=sch_id,
+        )
+        for i in s:
+            _class.students.append(i)
+            i.student_class = _class
+        classes.append(_class)
+    session.add_all(classes)
+    await session.commit()

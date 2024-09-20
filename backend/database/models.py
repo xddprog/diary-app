@@ -155,7 +155,7 @@ class Student(Base, Person):
 
     id: Mapped[UUID4] = mapped_column(primary_key=True, unique=True)
     private: Mapped[bool] = mapped_column(default=False)
-    school: Mapped[UUID4] = mapped_column(ForeignKey('schools.id'))
+    school: Mapped[UUID4]
 
     subjects: Mapped[list['Subject']] = relationship(
         back_populates='students',

@@ -10,7 +10,7 @@ class ManagerService:
         self.repository = repository
 
     async def update_registered(self, form: dict, manager_id: UUID4):
-        await self.repository.update(manager_id, form)
+        manager = await self.repository.update(manager_id, form)
 
     async def check_by_register_code(self, register_code) -> Manager:
         manager = await self.repository.get_by_attribute(
@@ -24,3 +24,6 @@ class ManagerService:
         return await self.repository.get_by_attribute(
             self.repository.model.email, email
         )
+    
+    async def add_item(self, form: dict):
+        return await self.repository.add_item(form)
