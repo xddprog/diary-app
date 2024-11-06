@@ -52,9 +52,9 @@ class StudentRepository(SqlAlchemyRepository):
         await self.session.commit()
 
     async def get_all_student_marks(self, student_id: UUID4, year: int):
-            query = select(Subject).where(Subject.students.has(id=student_id))
-            subjects = await self.session.execute(query)
-            return subjects.scalars().all()
+        query = select(Subject).where(Subject.students.has(id=student_id))
+        subjects = await self.session.execute(query)
+        return subjects.scalars().all()
 
     # async def get_students_rating(
     #     self,

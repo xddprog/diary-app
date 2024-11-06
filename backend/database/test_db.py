@@ -233,4 +233,5 @@ async def init_classes():
             i.student_class = _class
         classes.append(_class)
     session.add_all(classes)
+    session.close()
     await session.commit()

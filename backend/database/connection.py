@@ -14,11 +14,7 @@ class DatabaseConnection:
         )
 
     async def get_session(self) -> AsyncSession:
-        session = AsyncSession(bind=self._engine)
-        try:
-            return session
-        finally:
-            await session.close()
+        return AsyncSession(bind=self._engine)
 
     async def create_tables(self):
         async with self._engine.begin() as conn:

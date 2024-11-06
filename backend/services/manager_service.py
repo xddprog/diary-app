@@ -21,9 +21,12 @@ class ManagerService:
         return manager
 
     async def get_by_email(self, email: str) -> Manager:
-        return await self.repository.get_by_attribute(
+        manager = await self.repository.get_by_attribute(
             self.repository.model.email, email
         )
+        if not manager:
+            raise errors.ManagerNotFoundError()
+        return manager
     
     async def add_item(self, form: dict):
         return await self.repository.add_item(form)

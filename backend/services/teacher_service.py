@@ -59,6 +59,9 @@ class TeacherService:
         return await self.model_dump(teacher)
 
     async def get_by_email(self, email: str) -> Teacher:
-        return await self.repository.get_by_attribute(
+        teacher = await self.repository.get_by_attribute(
             self.repository.model.email, email
         )
+        if not teacher:
+            raise errors.TeacherNotFoundError()
+        return teacher

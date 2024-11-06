@@ -18,6 +18,12 @@ class JwtConfig:
     access_token_time: int
 
 
+@dataclass
+class RedisConfig:
+    host: str
+    port: int
+
+
 def load_database_config() -> DatabaseConfig:
     env = Env()
     env.read_env()
@@ -38,3 +44,11 @@ def load_jwt_config() -> JwtConfig:
         algorithm=env.str("JWT_ALGORITHM"),
         access_token_time=int(env.str("JWT_ACCESS_TOKEN_TIME")),
     )
+
+
+
+def load_redis_config() -> RedisConfig:
+    env = Env()
+    env.read_env()
+    return RedisConfig(host=env.str("REDIS_HOST"), port=env.int("REDIS_PORT"))
+

@@ -47,7 +47,6 @@ async def register_user(
     form = form.model_dump(exclude_none=True)
 
     user = await service.update_registered(form, user.id)
-    
     return TokenModel(token=token, user_role=user.role, user_id=user.id)
 
 
@@ -71,10 +70,6 @@ async def create_access_token(
 
 @router.get("/check")
 async def check_current_user(
-    auth_service: Annotated[AuthService, Depends(get_auth_service)],
-    token_data=Depends(get_current_user),
-    role=Header(),
-):
-    print(role, token_data.get("role"))
-    await auth_service.check_role(int(role), token_data.get("role"))
+    token_data=Depends(get_current_user)
+) -> bool:
     return True

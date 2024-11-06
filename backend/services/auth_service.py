@@ -37,7 +37,7 @@ class AuthService:
             if email is None or role is None:
                 raise errors.InvalidToken()
 
-            return payload
+            return email, role
         except (jwt.exceptions.PyJWTError, AttributeError):
             raise errors.InvalidToken()
 

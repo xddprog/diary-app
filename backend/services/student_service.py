@@ -86,9 +86,12 @@ class StudentService:
         return student
 
     async def get_by_email(self, email: str) -> Student:
-        return await self.repository.get_by_attribute(
+        student = await self.repository.get_by_attribute(
             self.repository.model.email, email
         )
+        if not student:
+            raise errors.StudentNotFoundError()
+        return student
 
     @staticmethod
     async def filter_student_marks(
