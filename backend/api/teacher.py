@@ -5,10 +5,11 @@ from fastapi.responses import JSONResponse
 from pydantic import UUID4
 from starlette import status
 
+from services.class_service import ClassService
 from dto.teacher import BaseTeacherModel, NewTeacherModel, UpdateTeacherModel
 from services import SubjectService
 from services.teacher_service import TeacherService
-from utils.dependencies import get_teacher_service, get_subject_service
+from utils.dependencies import get_class_service, get_teacher_service, get_subject_service
 
 router = APIRouter(prefix="/teachers", tags=["teacher"])
 
@@ -68,3 +69,12 @@ async def update_teacher(
         status_code=status.HTTP_200_OK,
         content={"message": "Teacher edit successfully"},
     )
+
+
+@router.get("/{teacher_id}/classes/all")
+async def get_teacher_classes(
+    teacher_id: UUID4,
+    class_service: Annotated[ClassService, Depends(get_class_service)],
+) -> list[BaseTeacherModel]:
+    
+    return await class_service.get_teacher_classes(teacher_id)

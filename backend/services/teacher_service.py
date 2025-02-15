@@ -1,7 +1,7 @@
 from pydantic import UUID4
 
 from database.models import Teacher
-from dto.teacher import BaseTeacherModel, NewTeacherModel, UpdateTeacherModel
+from dto.teacher import BaseTeacherModel, NewTeacherModel, TeacherClassModel, UpdateTeacherModel
 from repositories.base import BaseRepository
 import utils.errors.teacher_errors as errors
 
@@ -14,9 +14,7 @@ class TeacherService:
     async def model_dump(model: Teacher) -> BaseTeacherModel:
         return BaseTeacherModel.model_validate(model, from_attributes=True)
 
-    async def dump_teachers(
-        self, teachers: list[Teacher]
-    ) -> list[BaseTeacherModel]:
+    async def dump_teachers(self, teachers: list[Teacher]) -> list[BaseTeacherModel]:
         return [await self.model_dump(teacher) for teacher in teachers]
 
     async def get_all_teachers(self) -> list[Teacher]:
@@ -56,7 +54,7 @@ class TeacherService:
 
     async def update_registered(self, form: dict, teacher_id: UUID4) -> None:
         teacher = await self.repository.update(teacher_id, form)
-        return await self.model_dump(teacher)
+        return teacher
 
     async def get_by_email(self, email: str) -> Teacher:
         teacher = await self.repository.get_by_attribute(

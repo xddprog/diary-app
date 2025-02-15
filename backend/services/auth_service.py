@@ -15,9 +15,7 @@ class AuthService:
         self.config = load_jwt_config()
 
     async def create_token(self, **kwargs):
-        expire = datetime.now() + timedelta(
-            minutes=self.config.access_token_time
-        )
+        expire = datetime.now() + timedelta(minutes=self.config.access_token_time)
         kwargs.update({"exp": expire})
         token = jwt.encode(
             kwargs, self.config.jwt_secret, algorithm=self.config.algorithm
@@ -46,10 +44,10 @@ class AuthService:
     ) -> None:
         if user_registered:
             raise errors.UserAlreadyRegister()
-        
+
         form.hashed_password = self.context.hash(form.hashed_password)
         form.registered = True
-        
+
         token = await self.create_token(email=form.email, role=form.role)
         return token
 

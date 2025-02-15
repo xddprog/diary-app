@@ -1,16 +1,16 @@
-import {useEffect, useState} from "react";
-import {getClassInfo} from "../../api/classes.jsx";
-import {List, Pagination, Space, Typography} from "antd";
-import AddStudent from "../StudentComponents/AddStudent.jsx";
-import SetTeacher from "./SetClassTeacher.jsx";
-import Student from "../StudentComponents/Student.jsx";
-import ClassroomTeacher from "./ClassroomTeacher.jsx";
+import { List, Space, Typography } from "antd";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { getClassInfo } from "../../api/classes.jsx";
+import Student from "../studentComponents/Student.jsx";
+import ClassroomTeacher from "./ClassroomTeacher.jsx";
+import SetTeacher from "./SetClassTeacher.jsx";
+import AddNewStudent from "../studentComponents/AddStudent.jsx";
 
 
 
 
-export default function Class({cls, setTeachersComponents, classesOptions, subjectOptions}) {
+export default function Class({ cls, setTeachersComponents, classesOptions, subjectOptions }) {
     const [teacherComponent, setTeacherComponent] = useState(null);
     const [studentsComponents, setStudentsComponent] = useState([]);
     const [pageMinValue, setPageMinValue] = useState(0);
@@ -25,7 +25,7 @@ export default function Class({cls, setTeachersComponents, classesOptions, subje
             classesOptions,
             setStudentsComponent
         ).then((response) => {
-            let classroomTeacher    
+            let classroomTeacher
             const clsInfo = response.data;
             const classStudents = clsInfo.students.map((student) => {
                 return (
@@ -40,7 +40,7 @@ export default function Class({cls, setTeachersComponents, classesOptions, subje
 
             if (clsInfo.classroom_teacher !== null) {
                 classroomTeacher = (
-                    <ClassroomTeacher teacher={clsInfo.classroom_teacher}/>
+                    <ClassroomTeacher teacher={clsInfo.classroom_teacher} />
                 )
             } else {
                 classroomTeacher = (
@@ -49,7 +49,7 @@ export default function Class({cls, setTeachersComponents, classesOptions, subje
                     </ClassroomTeacherNotFound>
                 )
             }
-            
+
             setStudentsComponent(classStudents)
             setTeacherComponent(classroomTeacher)
         })
@@ -75,18 +75,18 @@ export default function Class({cls, setTeachersComponents, classesOptions, subje
         <Space direction="vertical" >
             <ClassTitle>Классный руководитель</ClassTitle>
             {teacherComponent}
-            <SetTeacher classId={cls} handlerTeacher={setTeacherComponent}/>
+            <SetTeacher classId={cls} handlerTeacher={setTeacherComponent} />
             <ClassStudentsContainerTitle>Ученики</ClassStudentsContainerTitle>
-            {studentsComponents.length !== 0 ? (<List
+            {studentsComponents.length !== 0 && (<List
                 pagination={{
                     pageSize: 4
                 }}
                 dataSource={studentsComponents}
                 renderItem={item => <StyledListItem>{item}</StyledListItem>}
-            />): []}
-            <AddStudent 
-                handlerStudents={setStudentsComponent} 
-                classId={cls} 
+            />)}
+            <AddNewStudent
+                handlerStudents={setStudentsComponent}
+                classId={cls}
                 subjectOptions={subjectOptions}
             />
         </Space>

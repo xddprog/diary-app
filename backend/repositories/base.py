@@ -39,7 +39,7 @@ class BaseRepository(ABC):
 
 class SqlAlchemyRepository(BaseRepository):
     model: TypeModels = None
-    
+
     def __init__(self, session: AsyncSession):
         self.session = session
 
@@ -77,9 +77,11 @@ class SqlAlchemyRepository(BaseRepository):
         )
 
         item = await self.session.execute(query)
+        item = item.scalar_one_or_none()
         await self.session.commit()
+        await self.session.refresh(item)
 
-        return item.scalars().all()[0]
+        return item
 
     async def update_by_attribute(
         self, item_id: UUID4, attribute, value: str | UUID4

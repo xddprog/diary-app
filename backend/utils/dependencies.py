@@ -29,19 +29,27 @@ async def get_session(
         await session.close()
 
 
-async def get_class_service(session: Annotated[AsyncSession, Depends(get_session)]):
+async def get_class_service(
+    session: Annotated[AsyncSession, Depends(get_session)],
+):
     return services.ClassService(repositories.ClassRepository(session=session))
 
 
-async def get_teacher_service(session: Annotated[AsyncSession, Depends(get_session)]):
+async def get_teacher_service(
+    session: Annotated[AsyncSession, Depends(get_session)],
+):
     return services.TeacherService(repositories.TeacherRepository(session=session))
 
 
-async def get_subject_service(session: Annotated[AsyncSession, Depends(get_session)]):
+async def get_subject_service(
+    session: Annotated[AsyncSession, Depends(get_session)],
+):
     return services.SubjectService(repositories.SubjectRepository(session=session))
 
 
-async def get_student_service(session: Annotated[AsyncSession, Depends(get_session)]):
+async def get_student_service(
+    session: Annotated[AsyncSession, Depends(get_session)],
+):
     return services.StudentService(repositories.StudentRepository(session=session))
 
 
@@ -49,11 +57,15 @@ async def get_auth_service():
     return services.AuthService()
 
 
-async def get_manager_service(session: Annotated[AsyncSession, Depends(get_session)]):
+async def get_manager_service(
+    session: Annotated[AsyncSession, Depends(get_session)],
+):
     return services.ManagerService(repositories.ManagerRepository(session=session))
 
 
-async def get_schedule_service(session: Annotated[AsyncSession, Depends(get_session)]):
+async def get_schedule_service(
+    session: Annotated[AsyncSession, Depends(get_session)],
+):
     return services.ScheduleService(repositories.ScheduleRepository(session=session))
 
 

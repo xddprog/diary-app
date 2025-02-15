@@ -6,6 +6,7 @@ from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from api import *
+from database.test_db import init_classes
 from config import load_database_config
 from utils.dependencies import get_current_user
 from database.connection import DatabaseConnection

@@ -1,12 +1,12 @@
-import {Menu} from "antd";
-import Class from "../ClassComponents/Class.jsx";
-import {getTeachers} from "../../api/teachers.jsx";
-import AddNewTeacher from "../TeacherComponents/AddTeacher.jsx";
-import {useState} from "react";
-import AddClassModal from "../ClassComponents/AddClass.jsx";
-import AddSubjectModal from "../subjectComponents/AddSubject.jsx";
-import Teacher from "../TeacherComponents/Teacher.jsx";
+import { Menu } from "antd";
+import { useState } from "react";
 import styled from "styled-components";
+import { getTeachers } from "../../api/teachers.jsx";
+import AddSubjectModal from "../subjectComponents/AddSubject.jsx";
+import AddNewTeacher from "../teacherComponents/AddTeacher.jsx";
+import Teacher from "../teacherComponents/Teacher.jsx";
+import AddClassModal from "../сlassComponents/AddClass.jsx";
+import Class from "../сlassComponents/Class.jsx";
 
 
 export default function ManagerPageMenu(
@@ -23,7 +23,7 @@ export default function ManagerPageMenu(
     const [addClassModalIsOpen, setAddClassModalIsOpen] = useState(false);
     const [addSubjectModalIsOpen, setAddSubjectModalIsOpen] = useState(false);
 
-    async function onClickClass(cls){
+    async function onClickClass(cls) {
         const classComponent = (
             <Class
                 key={cls.key}
@@ -37,7 +37,7 @@ export default function ManagerPageMenu(
         setTeachersComponents([])
     }
 
-    async function onClickSubject(subject){
+    async function onClickSubject(subject) {
         setTeachersComponents(
             [
                 await getTeachers(
@@ -59,13 +59,13 @@ export default function ManagerPageMenu(
         setClassComponent(null)
     }
 
-    async function onClickAddClass(subject){
+    async function onClickAddClass(subject) {
         setClassComponent(null)
         setTeachersComponents([])
         setAddClassModalIsOpen(true)
     }
 
-    async function onClickAddSubject(subject){
+    async function onClickAddSubject(subject) {
         setClassComponent(null)
         setTeachersComponents([])
         setAddSubjectModalIsOpen(true)
@@ -95,10 +95,10 @@ export default function ManagerPageMenu(
                 onClick={onClickMenuButton}
                 mode="inline"
                 items={[
-                    subjectsOptions, 
-                    classesOptions, 
-                    {key: 'addSubject', label:'Добавить предмет'}, 
-                    {key: 'addClass', label:'Добавить класс'}
+                    subjectsOptions,
+                    classesOptions,
+                    { key: 'addSubject', label: 'Добавить предмет' },
+                    { key: 'addClass', label: 'Добавить класс' }
                 ]}
             />
             <AddClassModal

@@ -1,5 +1,6 @@
 from pydantic import UUID4
 
+from dto.teacher import TeacherClassModel
 from database.models import Class
 from repositories.base import BaseRepository
 from dto.cls import ClassDTO, AddClassModel
@@ -36,3 +37,7 @@ class ClassService:
 
     async def add_class(self, form: AddClassModel):
         await self.repository.add_item(form.model_dump())
+
+    async def get_teacher_classes(self, teacher_id: UUID4) -> list[TeacherClassModel]:
+        classes = await self.repository.get_teacher_classes(teacher_id)
+        return await self.dump_teachers(classes, TeacherClassModel)

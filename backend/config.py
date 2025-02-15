@@ -46,9 +46,7 @@ def load_jwt_config() -> JwtConfig:
     )
 
 
-
 def load_redis_config() -> RedisConfig:
     env = Env()
     env.read_env()
     return RedisConfig(host=env.str("REDIS_HOST"), port=env.int("REDIS_PORT"))
-

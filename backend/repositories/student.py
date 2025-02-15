@@ -1,10 +1,12 @@
 from pydantic import UUID4
-from sqlalchemy import select, delete
+from sqlalchemy import ARRAY, and_, extract, func, select, delete
 from sqlalchemy.orm import selectinload
+from sqlalchemy.dialects.postgresql.operators import OVERLAP
+from sqlalchemy.dialects.postgresql.array import array
 
 from dto.student import UpdateStudentModel
 from .base import SqlAlchemyRepository
-from database.models import Student, Class, Subject
+from database.models import Mark, Student, Class, Subject
 
 
 class StudentRepository(SqlAlchemyRepository):
@@ -56,32 +58,28 @@ class StudentRepository(SqlAlchemyRepository):
         subjects = await self.session.execute(query)
         return subjects.scalars().all()
 
-    # async def get_students_rating(
-    #     self,
-    #     subjects: list[int] | None,
-    #     classes: list[UUID4] | None,
-    #     year: int | None,
-    # ) -> list[Student]:
-    #     async with self.session_factory() as session:
-    #         query = select(Mark).join(Student).group_by(Student)
-    #         if classes and subjects:
-    #             query = query.where(
-    #                 Mark.id,
-    #                 Student.class_fk.in_(classes),
-    #                 OVERLAP(Student.subjects, array(subjects)),
-    #                 extract("year", Mark.date) == year,
-    #             )
-    #         elif subjects:
-    #             query = query.where(
-    #                 Mark.id,
-    #                 OVERLAP(Student.subjects, array(subjects)),
-    #                 extract("year", Mark.date) == year
-    #             )
-    #         elif classes:
-    #             query = query.where(
-    #                 Mark.id,
-    #                 Student.class_fk.in_(classes),
-    #                 extract("year", Mark.date) == year,
-    #             )
-    #         students = await session.execute(query)
-    #         return students.scalars().all()
+    async def get_students_rating(
+        self,
+        subjects: list[int] | None,
+        classes: list[UUID4] | None,
+        year: int | None,
+    ) -> list[Student]:
+        query = (
+            select(Student, func.avg(Mark.mark_value).label("average_mark"))
+            .join(Mark, Student.id == Mark.student_fk)
+            .options(selectinload(Student.marks))
+            .group_by(Student.id)
+        )
+        where_clauses = []
+        if subjects:
+            where_clauses.append(Student.subjects.any(Subject.id.in_(subjects)))
+        if classes:
+            where_clauses.append(Student.class_fk.in_(classes))
+        if year:
+            where_clauses.append(extract("year", Mark.date) == year)
+
+        if where_clauses:
+            query = query.where(*where_clauses)
+
+        students = await self.session.execute(query)
+        return students

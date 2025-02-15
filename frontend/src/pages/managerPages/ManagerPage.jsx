@@ -1,12 +1,12 @@
-import {useEffect, useState} from "react";
-import {Space} from "antd";
-import {getClassesOptions} from "../../api/classes.jsx";
-import {getSubjectsOptions} from "../../api/subjects.jsx";
-import ManagerPageMenu from "../../components/Menu/ManagerPageMenu.jsx";
-import {checkUser} from "../../api/auth.jsx";
-import ErrorBoundary from "../../components/errorComponents/ErrorBoundary.jsx";
-import { FlexRow } from "../../components/BaseComponents.jsx";
+import { Space } from "antd";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { checkUser } from "../../api/auth.jsx";
+import { getClassesOptions } from "../../api/classes.jsx";
+import { getSubjectsOptions } from "../../api/subjects.jsx";
+import { FlexRow } from "../../components/BaseComponents.jsx";
+import ErrorBoundary from "../../components/errorComponents/ErrorBoundary.jsx";
+import ManagerPageMenu from "../../components/menu/ManagerPageMenu.jsx";
 
 
 export default function ManagerPage() {

@@ -25,7 +25,6 @@ router = APIRouter(
 )
 
 
-
 @router.post("/register")
 async def register_user(
     form: RegisterModel,
@@ -57,7 +56,7 @@ async def create_access_token(
     teacher_service: Annotated[TeacherService, Depends(get_teacher_service)],
     student_service: Annotated[StudentService, Depends(get_student_service)],
     manager_service: Annotated[ManagerService, Depends(get_manager_service)],
-):  
+):
     if form.role == 1:
         user = await teacher_service.get_by_email(form.email)
     elif form.role == 2:
@@ -69,7 +68,5 @@ async def create_access_token(
 
 
 @router.get("/check")
-async def check_current_user(
-    token_data=Depends(get_current_user)
-) -> bool:
+async def check_current_user(token_data=Depends(get_current_user)) -> bool:
     return True

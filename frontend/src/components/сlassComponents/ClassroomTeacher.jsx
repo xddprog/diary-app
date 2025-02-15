@@ -1,10 +1,8 @@
-import {Button, Card, Modal} from "antd";
-import {useState} from "react";
-import DeleteTeacherModal from "../TeacherComponents/DeleteTeacherModal.jsx";
+import { Card } from "antd";
 import styled from "styled-components";
 
 
-export default function ClassroomTeacher({teacher}) {
+export default function ClassroomTeacher({ teacher }) {
     return (
         <>
             <StyledCard
@@ -22,24 +20,24 @@ export default function ClassroomTeacher({teacher}) {
                 </p>
                 {(teacher.register != null) ?
                     <div><p><b>Электронная почта:</b>{
-                    (teacher.email == null)
-                        ? ' Не зарегистирован' :
-                        ` ${teacher.email}`
-                }
-                </p>
-                <p><b>Вконтакте:</b>{
-                    (teacher.vk == null)
-                        ? ' Не указан' :
-                        ` ${teacher.vk}`
-                }
-                </p>
-                <p><b>Телеграмм:</b>{
-                    (teacher.telegram == null)
-                        ? ' Не указан' :
-                        ` ${teacher.telegram}`
-                }
-                </p>
-                </div>: <p><b>Зарегистрирован:</b> Нет</p>}
+                        (teacher.email == null)
+                            ? ' Не зарегистирован' :
+                            ` ${teacher.email}`
+                    }
+                    </p>
+                        <p><b>Вконтакте:</b>{
+                            (teacher.vk == null)
+                                ? ' Не указан' :
+                                ` ${teacher.vk}`
+                        }
+                        </p>
+                        <p><b>Телеграмм:</b>{
+                            (teacher.telegram == null)
+                                ? ' Не указан' :
+                                ` ${teacher.telegram}`
+                        }
+                        </p>
+                    </div> : <p><b>Зарегистрирован:</b> Нет</p>}
             </StyledCard>
         </>
     )

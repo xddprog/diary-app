@@ -2,6 +2,7 @@ import {Button, Form, Input, InputNumber, Modal, Select, Space, Typography} from
 import {useState} from "react";
 import {addStudent, getStudents} from "../../api/students.jsx";
 import styled from "styled-components";
+import Student from "./Student.jsx";
 
 
 function AddStudentModal({classId, modalIsOpen, handler, subjectOptions, handlerStudents}) {
@@ -17,6 +18,7 @@ function AddStudentModal({classId, modalIsOpen, handler, subjectOptions, handler
                     response => response.data.map(student => {
                         return (
                             <Student
+                                key={student.id}
                                 student={student}
                                 handlerStudents={handlerStudents}
                                 classId={classId}

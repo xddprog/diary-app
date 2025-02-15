@@ -24,7 +24,6 @@ function SetTeacherButton({teacherId, classId, handlerTeacher, handler}) {
 }
 
 function SetTeacherModal({modalIsOpen, handlerTeacher, handler, classId, teacherOptions}) {
-    
     return (
         <Modal
             centered

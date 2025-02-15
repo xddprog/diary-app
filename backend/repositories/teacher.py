@@ -29,10 +29,3 @@ class TeacherRepository(SqlAlchemyRepository):
             )
             await self.session.execute(query)
             await self.session.commit()
-
-    #
-    # async def get_by_register_code(self, register_code):
-    #     async with self.session_factory() as session:
-    #         query = select(Teacher).where(Teacher.register_code == register_code)
-    #         teachers = await session.execute(query)
-    #         return teachers.scalar_one()

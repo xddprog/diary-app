@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import uuid4
 from pydantic import Field, UUID4, BaseModel
 
@@ -23,5 +24,10 @@ class UpdateTeacherModel(BaseModel):
     age: int | None = None
     subjects: list[int] | None = None
 
+
+class TeacherClassModel(BaseModel):
+    cls: BaseClassModel
+    subjects: list[BaseSubjectModel]
+    next_lesson: datetime = datetime.now()
 
 type TeacherDTO = NewTeacherModel | BaseTeacherModel

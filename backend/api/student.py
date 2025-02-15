@@ -30,9 +30,7 @@ async def get_student_profile(
     student_id: UUID4,
     students_service: Annotated[StudentService, Depends(get_student_service)],
 ):
-    return await students_service.get_student(
-        student_id, StudentModel, dump=True
-    )
+    return await students_service.get_student(student_id, StudentModel, dump=True)
 
 
 @router.post("/rating")
@@ -93,9 +91,7 @@ async def update_student(
 
 @router.get("/{student_id}/schedule/{year}/{week}")
 async def get_student_schedule(
-    schedule_service: Annotated[
-        ScheduleService, Depends(get_schedule_service)
-    ],
+    schedule_service: Annotated[ScheduleService, Depends(get_schedule_service)],
     student_id: UUID4,
     year: int,
     week: int,
@@ -105,16 +101,12 @@ async def get_student_schedule(
 
 @router.get("/{student_id}/schedule/{year}/{week}/rows")
 async def get_student_schedule_rows(
-    schedule_service: Annotated[
-        ScheduleService, Depends(get_schedule_service)
-    ],
+    schedule_service: Annotated[ScheduleService, Depends(get_schedule_service)],
     student_id: UUID4,
     year: int,
     week: int,
 ) -> list[ScheduleRowModel]:
-    return await schedule_service.get_student_schedule_rows(
-        student_id, year, week
-    )
+    return await schedule_service.get_student_schedule_rows(student_id, year, week)
 
 
 @router.get("/{student_id}/marks/{year}/all")
